@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "removeComments": true,
+        "pretty": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "outFile": "build/main.js",
+        "outDir": "build/ts",
+        "target": "es5"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

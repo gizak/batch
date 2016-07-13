@@ -1,0 +1,29 @@
+{
+  "name": "batch",
+  "version": "1.0.0",
+  "description": "Batch processing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "$(npm bin)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gizak/batch.git"
+  },
+  "keywords": [
+    "batch",
+    "processing",
+    "jsr-352",
+    "typescript"
+  ],
+  "author": "gizak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gizak/batch/issues"
+  },
+  "homepage": "https://github.com/gizak/batch#readme",
+  "devDependencies": {
+    "typescript": "^1.8.10"
+  }
+}
