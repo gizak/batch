@@ -4,8 +4,8 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "$(npm bin)"
+    "test": "tsc test/index.ts --outDir build/test && node build/test/index.js",
+    "build": "tsc -p ."
   },
   "repository": {
     "type": "git",
@@ -27,5 +27,8 @@
     "eslint": "^3.0.1",
     "eslint-plugin-react": "^5.2.2",
     "typescript": "^1.8.10"
+  },
+  "dependencies": {
+    "lokijs": "^1.4.1"
   }
 }

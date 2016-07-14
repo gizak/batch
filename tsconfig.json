@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
+        "module": "commonjs",
         "noImplicitAny": true,
         "removeComments": true,
-        "pretty": true,
+        "pretty": false,
         "preserveConstEnums": true,
-        "sourceMap": true,
-        "outFile": "build/main.js",
-        "outDir": "build/ts",
-        "target": "es5"
+        "sourceMap": false,
+        "outDir": "./build",
+        "target": "es2015"
     },
     "exclude": [
         "node_modules"
