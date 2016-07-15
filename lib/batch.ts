@@ -29,8 +29,8 @@ export class BatchRuntime {
 	private static repo: JobRepository
 
 	public static getJobRepository() {
-		if(!BatchRuntime.repo) {
-			BatchRuntime.repo = new JobRepository('batch-db.json')
+		if (!BatchRuntime.repo) {
+			BatchRuntime.repo = new JobRepository()
 		}
 		return BatchRuntime.repo
 	}

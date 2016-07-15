@@ -1,4 +1,5 @@
 import {BatchRuntime} from '../lib/batch'
+import debug = require('debug')
 
 const jobop = BatchRuntime.getJobOperator()
 const baseUrl = 'http://jsonplaceholder.typicode.com'
@@ -34,6 +35,8 @@ const batchleter = {
 	}
 }
 
+jobop.initRepository()
+
 jobop.loadJob({
 	id: 'testjob',
 	restartble: true,
@@ -53,3 +56,7 @@ jobop.loadJob({
 		}
 	]
 })
+
+const t = debug('test')
+
+t(jobop.lsJobs())

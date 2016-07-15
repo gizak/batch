@@ -4,7 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "tsc test/index.ts --outDir build/test && node build/test/index.js",
+    "test": "tsc -p . && DEBUG=* node build/test/index.js",
     "build": "tsc -p ."
   },
   "repository": {
@@ -29,6 +29,7 @@
     "typescript": "^1.8.10"
   },
   "dependencies": {
+    "debug": "^2.2.0",
     "lokijs": "^1.4.1"
   }
 }
