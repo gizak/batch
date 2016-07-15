@@ -1,4 +1,5 @@
 import {JobOperator} from './job-operator'
+import {JobRepository} from './job-repository'
 
 export enum BatchStatus {
 	STARTING,
@@ -25,6 +26,15 @@ export enum MetricType {
  * BatchRuntime
  */
 export class BatchRuntime {
+	private static repo: JobRepository
+
+	public static getJobRepository() {
+		if(!BatchRuntime.repo) {
+			BatchRuntime.repo = new JobRepository('batch-db.json')
+		}
+		return BatchRuntime.repo
+	}
+
 	public static getJobOperator(): JobOperator {
 		return new JobOperator()
 	}
