@@ -7,14 +7,13 @@ import {BatchRuntime} from './batch'
 export class JobOperator {
 	private db: JobRepository
 
-	constructor() {}
+	constructor() { }
 
-	loadJob(job: Object): boolean {
-		this.db.addJob(job)
-		return true
+	loadJob(job: any):Promise<string> {
+		return this.db.addJob(job)
 	}
 
-	lsJobs(): string[] {
+	lsJobs(): Promise<string[]> {
 		return this.db.getJobIds()
 	}
 

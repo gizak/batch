@@ -4,7 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "tsc -p . && DEBUG=* node build/test/index.js",
+    "test": "tsc -p . && node build/test/index.js",
     "build": "tsc -p ."
   },
   "repository": {
@@ -30,6 +30,6 @@
   },
   "dependencies": {
     "debug": "^2.2.0",
-    "lokijs": "^1.4.1"
+    "nedb": "^1.8.0"
   }
 }

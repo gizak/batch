@@ -59,4 +59,4 @@ jobop.loadJob({
 
 const t = debug('test')
 
-t(jobop.lsJobs())
+jobop.lsJobs().then(data=>{console.log(data)})
