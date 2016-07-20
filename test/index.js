@@ -1,32 +1,31 @@
-import {BatchRuntime} from '../lib/batch'
-import debug = require('debug')
+const batch = require('../build/lib/batch')
 
-const jobop = BatchRuntime.getJobOperator()
+const jobop = batch.BatchRuntime.getJobOperator()
 const baseUrl = 'http://jsonplaceholder.typicode.com'
 
 const chunker = {
-	open: (chk: Object) => {
+	open: (chk) => {
 		console.log('open')
 	},
-	readItem: (): Object => {
+	readItem: () => {
 		console.log('readItem')
 		return {}
 	},
 	close: () => {
 		console.log('close')
 	},
-	checkpointinfo: (): Object => {
+	checkpointinfo: () => {
 		console.log('checkpoint')
 		return {}
 	},
-	processItem: (item: Object): Object => {
+	processItem: (item) => {
 		console.log('processItem')
 		return {}
 	}
 }
 
 const batchleter = {
-	process: (): string => {
+	process: () => {
 		console.log('process')
 		return ''
 	},
