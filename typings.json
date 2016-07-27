@@ -1,7 +1,6 @@
 {
   "globalDependencies": {
     "debug": "registry:dt/debug#0.0.0+20160317120654",
-    "lokijs": "registry:dt/lokijs#0.0.0+20160316155526",
     "nedb": "registry:dt/nedb#0.0.0+20160505185910"
   }
 }

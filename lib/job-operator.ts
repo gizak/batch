@@ -9,7 +9,7 @@ export class JobOperator {
 
 	constructor() { }
 
-	loadJob(job: any):Promise<string> {
+	loadJob(job: any): Promise<string> {
 		return this.db.addJob(job)
 	}
 

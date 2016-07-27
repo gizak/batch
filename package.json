@@ -4,7 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "node build/test/index.js",
+    "test": "node test/index.js",
     "build": "tsc -p ."
   },
   "repository": {

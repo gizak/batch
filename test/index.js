@@ -56,6 +56,4 @@ jobop.loadJob({
 	]
 })
 
-const t = debug('test')
-
 jobop.lsJobs().then(data=>{console.log(data)})
