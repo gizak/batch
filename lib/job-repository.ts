@@ -17,7 +17,10 @@ export class JobRepository {
 
 	addJob(job: any): Promise<string> {
 		return new Promise((resolve, reject) => {
-			this.jobs.insert(job, err => { if (err) reject(err); else resolve(job.id) })
+			this.jobs.insert(job, err => {
+				if (err) reject(err)
+				else resolve(job.id)
+			})
 		})
 	}
 

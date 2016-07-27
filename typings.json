@@ -1,6 +1,9 @@
 {
   "globalDependencies": {
+    "cookies": "registry:dt/cookies#0.5.1+20160316171810",
     "debug": "registry:dt/debug#0.0.0+20160317120654",
-    "nedb": "registry:dt/nedb#0.0.0+20160505185910"
+    "koa": "registry:dt/koa#2.0.0+20160724024233",
+    "nedb": "registry:dt/nedb#0.0.0+20160505185910",
+    "node": "registry:dt/node#6.0.0+20160720070758"
   }
 }

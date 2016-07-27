@@ -1,5 +1,6 @@
 import {JobOperator} from './job-operator'
 import {JobRepository} from './job-repository'
+import * as Koa from 'koa'
 
 export enum BatchStatus {
 	STARTING,
@@ -27,6 +28,11 @@ export enum MetricType {
  */
 export class BatchRuntime {
 	private static repo: JobRepository
+
+	public static initServer(): Koa {
+		const app = new Koa()
+		return app
+	}
 
 	public static getJobRepository() {
 		if (!BatchRuntime.repo) {
