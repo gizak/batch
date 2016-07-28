@@ -35,7 +35,7 @@ const batchleter = {
 }
 
 jobop.initRepository()
-
+/*
 jobop.loadJob({
 	id: 'testjob',
 	restartble: true,
@@ -55,5 +55,5 @@ jobop.loadJob({
 		}
 	]
 })
-
+*/
 jobop.lsJobs().then(data=>{console.log(data)})
