@@ -31,7 +31,7 @@ export enum MetricType {
 export class BatchRuntime {
 	private static repo: JobRepository
 
-	public static initServer(): Koa {
+	public static init(): Koa {
 		const debug = Debug('app')
 		const app = new Koa()
 		const router = new Router()

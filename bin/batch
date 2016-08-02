@@ -2,4 +2,4 @@
 
 const batch = require('../build/lib/batch')
 
-batch.BatchRuntime.initServer().listen(3321)
+batch.BatchRuntime.init().listen(3321)
