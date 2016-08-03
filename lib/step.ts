@@ -1,14 +1,14 @@
 import {Chunk} from './chunk'
 import {Batchlet} from './batchlet'
 
-interface Step {
+export interface Step {
 	id: string
-	listener: StepListener
+	listener?: StepListener
 	chunk?: Chunk
 	batchlet?: Batchlet
 }
 
-interface StepListener {
+export interface StepListener {
 	beforeStep(): void
 	afterStep(): void
 }

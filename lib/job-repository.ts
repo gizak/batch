@@ -15,12 +15,29 @@ export class JobRepository {
 		this.stepExecs = new Datastore()
 	}
 
-	addJob(job: any): Promise<string> {
+	addJob(jobfile: string): Promise<string> {
 		return new Promise((resolve, reject) => {
-			this.jobs.insert(job, err => {
+			const job = require(jobfile)
+			const jobCfg = {_id: job.id, id: job.id, path: jobfile, _added: Date.now()}
+
+			this.jobs.insert(jobCfg, (err, newjob) => {
 				if (err) reject(err)
-				else resolve(job.id)
+				else resolve(newjob._id)
 			})
+		})
+	}
+
+	getJob(jobid: string): Promise<any> {
+		return new Promise((resolve,reject)=>{
+			this.jobs.find({_id:jobid},(err,doc)=>{
+				if (err) reject(err)
+				else if (doc) return resolve(doc[0])
+			})
+		})
+	}
+
+	addJobInstance(jobid: string): Promise<string> {
+		return new Promise((resolve, reject)=>{
 		})
 	}
 

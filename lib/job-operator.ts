@@ -9,12 +9,16 @@ export class JobOperator {
 
 	constructor() { }
 
-	loadJob(job: any): Promise<string> {
-		return this.db.addJob(job)
+	loadJob(jobfile: string): Promise<string> {
+		return this.db.addJob(jobfile)
 	}
 
 	lsJobs(): Promise<string[]> {
 		return this.db.getJobIds()
+	}
+
+	getJob(jobid: string): Promise<any> {
+		return this.db.getJob(jobid)
 	}
 
 	initRepository() {

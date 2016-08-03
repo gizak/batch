@@ -1,59 +1,7 @@
 const batch = require('../build/lib/batch')
-
 const jobop = batch.BatchRuntime.getJobOperator()
-const baseUrl = 'http://jsonplaceholder.typicode.com'
-
-const chunker = {
-	open: (chk) => {
-		console.log('open')
-	},
-	readItem: () => {
-		console.log('readItem')
-		return {}
-	},
-	close: () => {
-		console.log('close')
-	},
-	checkpointinfo: () => {
-		console.log('checkpoint')
-		return {}
-	},
-	processItem: (item) => {
-		console.log('processItem')
-		return {}
-	}
-}
-
-const batchleter = {
-	process: () => {
-		console.log('process')
-		return ''
-	},
-	stop: () => {
-		console.log('stop')
-	}
-}
 
 jobop.initRepository()
-/*
-jobop.loadJob({
-	id: 'testjob',
-	restartble: true,
-	steps: [
-		{
-			id: 'step1',
-			chunk: {
-				reader: chunker,
-				processor: chunker,
-				writer: chunker,
-				itemCount: 1
-			}
-		},
-		{
-			id: 'step2',
-			batchlet: batchleter
-		}
-	]
-})
-*/
+jobop.loadJob('/Users/gizak/Workspace/batch/test/job1.js').catch(err=>{throw err})
 jobop.lsJobs().then(data=>{console.log(data)})
+jobop.getJob('testjob').then(data=>{console.log(data)})

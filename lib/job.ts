@@ -1,14 +1,15 @@
 import {Batchlet} from './batchlet'
 import {Chunk} from './chunk'
+import {Step} from './step'
 
-interface Job {
+export interface Job {
 	id: string
 	restartable?: boolean
 	listener?: JobListener
-	steps: Array<Batchlet|Chunk>
+	steps: Step
 }
 
-interface JobListener {
+export interface JobListener {
 	beforeJob(): void
 	afterJob(): void
 }
