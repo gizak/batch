@@ -4,6 +4,7 @@
     "debug": "registry:dt/debug#0.0.0+20160317120654",
     "koa": "registry:dt/koa#2.0.0+20160724024233",
     "koa-router": "registry:dt/koa-router#7.0.0+20160314083221",
+    "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
     "nedb": "registry:dt/nedb#0.0.0+20160505185910",
     "node": "registry:dt/node#6.0.0+20160720070758"
   }

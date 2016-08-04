@@ -52,7 +52,7 @@ export class BatchRuntime {
 
 	public static getJobRepository() {
 		if (!BatchRuntime.repo) {
-			BatchRuntime.repo = new JobRepository()
+			BatchRuntime.repo = new JobRepository({})
 		}
 		return BatchRuntime.repo
 	}
