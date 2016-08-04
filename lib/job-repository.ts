@@ -1,4 +1,6 @@
 import * as Datastore from 'nedb'
+import * as fs from 'fs'
+import * as path from 'path'
 
 export class JobRepository {
 	protected db: Datastore
@@ -17,19 +19,23 @@ export class JobRepository {
 
 	addJob(jobfile: string): Promise<string> {
 		return new Promise((resolve, reject) => {
-			const job = require(jobfile)
-			const jobCfg = {_id: job.id, id: job.id, path: jobfile, _added: Date.now()}
-
-			this.jobs.insert(jobCfg, (err, newjob) => {
-				if (err) reject(err)
-				else resolve(newjob._id)
+			fs.access(jobfile, fs.R_OK, err => {
+				if (err) { reject(err) }
+				else {
+					const job = require(jobfile)
+					const jobCfg = { _id: job.id, id: job.id, path: path.resolve(jobfile), _added: Date.now() }
+					this.jobs.insert(jobCfg, (err, newjob) => {
+						if (err) reject(err)
+						else resolve(newjob._id)
+					})
+				}
 			})
 		})
 	}
 
 	getJob(jobid: string): Promise<any> {
-		return new Promise((resolve,reject)=>{
-			this.jobs.find({_id:jobid},(err,doc)=>{
+		return new Promise((resolve, reject) => {
+			this.jobs.find({ _id: jobid }, (err, doc) => {
 				if (err) reject(err)
 				else if (doc) return resolve(doc[0])
 			})
@@ -37,7 +43,7 @@ export class JobRepository {
 	}
 
 	addJobInstance(jobid: string): Promise<string> {
-		return new Promise((resolve, reject)=>{
+		return new Promise((resolve, reject) => {
 		})
 	}
 
