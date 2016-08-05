@@ -1,4 +1,4 @@
-import {Datastore} from './datastore'
+import {Datastore, NullStore} from './datastore'
 import {NeDB} from './datastores/nedb'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -13,10 +13,26 @@ export class JobRepository {
 
 	constructor(opts: any) {
 		this.options = opts
+		this.options.jobs = opts.jobs || {}
+		this.options.logs = opts.logs || {}
+		this.options.jobInsts = opts.jobInsts || {}
+		this.options.jobExecs = opts.jobExecs || {}
+		this.options.stepExecs = opts.stepExecs || {}
 	}
 
-	init(): Promise<void> {
-		return Promise.resolve()
+	getDatastore(name: string): Datastore {
+		if ('nedb' === name) {
+			return new NeDB()
+		}
+
+		return new NullStore()
+	}
+
+	init(): Promise<any> {
+		return Promise.all(['jobs','logs','jobInsts','jobExecs','stepExecs'].map(v => {
+			this[v] = this.getDatastore(this.options[v].datastore)
+			return this[v].open(this.options[v].uri,this.options[v].options)
+		}))
 	}
 
 	addJob(jobfile: string): Promise<string> {
@@ -26,10 +42,7 @@ export class JobRepository {
 				else {
 					const job = require(jobfile)
 					const jobCfg = { _id: job.id, id: job.id, path: path.resolve(jobfile), _added: Date.now() }
-					this.jobs.insert(jobCfg, (err, id) => {
-						if (err) reject(err)
-						else resolve(id)
-					})
+					this.jobs.insert(jobCfg).then(id => resolve(id) ).catch(err => reject(err))
 				}
 			})
 		})
@@ -37,13 +50,10 @@ export class JobRepository {
 
 	getJob(jobid: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			this.jobs.find({ _id: jobid }, (err, docs) => {
-				if (err) reject(err)
-				else {
+			this.jobs.find({ _id: jobid }).then( docs => {
 					if (docs) resolve(docs[0])
 					else resolve(null)
-				}
-			})
+			}).catch( err => reject(err))
 		})
 	}
 
@@ -54,7 +64,7 @@ export class JobRepository {
 
 	getJobIds(): Promise<string[]> {
 		return new Promise((resolve, reject) => {
-			this.jobs.find({}, (err, docs: any[]) => { resolve(docs.map(o => { return o.id })) })
+			this.jobs.find({}).then( docs=> { resolve(docs.map(o => { return o.id })) })
 		})
 	}
 }

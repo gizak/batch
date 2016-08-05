@@ -31,13 +31,13 @@ export enum MetricType {
 export class BatchRuntime {
 	private static repo: JobRepository
 
-	public static init(): Koa {
+	public static initServer(): Koa {
 		const debug = Debug('app')
 		const app = new Koa()
 		const router = new Router()
 		const jop = BatchRuntime.getJobOperator()
 
-		jop.initRepository()
+		jop.initRepository({})
 
 		router.get('/jobs', function *(next){
 			const jbs = yield jop.lsJobs()
@@ -50,9 +50,9 @@ export class BatchRuntime {
 		return app
 	}
 
-	public static getJobRepository() {
+	public static getJobRepository(opts: any) {
 		if (!BatchRuntime.repo) {
-			BatchRuntime.repo = new JobRepository({})
+			BatchRuntime.repo = new JobRepository(opts)
 		}
 		return BatchRuntime.repo
 	}

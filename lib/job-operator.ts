@@ -21,7 +21,8 @@ export class JobOperator {
 		return this.db.getJob(jobid)
 	}
 
-	initRepository() {
-		this.db = BatchRuntime.getJobRepository()
+	initRepository(options: any): Promise<this> {
+		this.db = BatchRuntime.getJobRepository(options)
+		return this.db.init().then(()=>{ return this })
 	}
 }
