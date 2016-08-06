@@ -23,6 +23,6 @@ export class JobOperator {
 
 	initRepository(options: any): Promise<this> {
 		this.db = BatchRuntime.getJobRepository(options)
-		return this.db.init().then(()=>{ return this })
+		return this.db.init().then(() => { return this })
 	}
 }

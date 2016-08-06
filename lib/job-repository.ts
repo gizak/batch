@@ -38,7 +38,7 @@ export class JobRepository {
 	addJob(jobfile: string): Promise<string> {
 		return new Promise((resolve, reject) => {
 			fs.access(jobfile, fs.R_OK, err => {
-				if (err) { reject(err) }
+				if (err) reject(err)
 				else {
 					const job = require(jobfile)
 					const jobCfg = { _id: job.id, id: job.id, path: path.resolve(jobfile), _added: Date.now() }
