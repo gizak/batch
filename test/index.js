@@ -1,7 +1,7 @@
-const batch = require('../build/lib/batch')
+const batch = require('../build/lib/runtime')
 const jobop = batch.BatchRuntime.getJobOperator()
 
-jobop.initRepository({ jobs: { datastore: 'nedb' } })
+batch.BatchRuntime.initRepository({ jobs: { datastore: 'nedb' } })
 	.then(() => { return jobop.loadJob('/Users/gizak/Workspace/batch/test/job1.js') })
 	.then(() => { return jobop.lsJobs() })
 	.then(data => { console.log(data) })

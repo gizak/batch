@@ -1,28 +1,21 @@
 import {JobRepository} from './job-repository'
-import {BatchRuntime} from './batch'
+import {BatchRuntime} from './runtime'
 
 /**
  * JobOperator
  */
 export class JobOperator {
-	private db: JobRepository
-
 	constructor() { }
 
 	loadJob(jobfile: string): Promise<string> {
-		return this.db.addJob(jobfile)
+		return BatchRuntime.getJobRepository().addJob(jobfile)
 	}
 
 	lsJobs(): Promise<string[]> {
-		return this.db.getJobIds()
+		return BatchRuntime.getJobRepository().getJobIds()
 	}
 
 	getJob(jobid: string): Promise<any> {
-		return this.db.getJob(jobid)
-	}
-
-	initRepository(options: any): Promise<this> {
-		this.db = BatchRuntime.getJobRepository(options)
-		return this.db.init().then(() => { return this })
+		return BatchRuntime.getJobRepository().getJob(jobid)
 	}
 }

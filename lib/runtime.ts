@@ -31,28 +31,14 @@ export enum MetricType {
 export class BatchRuntime {
 	private static repo: JobRepository
 
-	public static initServer(): Koa {
-		const debug = Debug('app')
-		const app = new Koa()
-		const router = new Router()
-		const jop = BatchRuntime.getJobOperator()
-
-		jop.initRepository({})
-
-		router.get('/jobs', function *(next){
-			const jbs = yield jop.lsJobs()
-			this.body = JSON.stringify(jbs)
-			yield next
-		})
-
-		app.use(router.routes())
-		app.use(router.allowedMethods())
-		return app
+	public static initRepository(opts: any): Promise<void> {
+		BatchRuntime.repo = new JobRepository(opts)
+		return BatchRuntime.repo.init()
 	}
 
-	public static getJobRepository(opts: any) {
+	public static getJobRepository() {
 		if (!BatchRuntime.repo) {
-			BatchRuntime.repo = new JobRepository(opts)
+			throw new Error('Repository is not intialized')
 		}
 		return BatchRuntime.repo
 	}
