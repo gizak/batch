@@ -6,6 +6,7 @@
     "koa-router": "registry:dt/koa-router#7.0.0+20160314083221",
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
     "nedb": "registry:dt/nedb#0.0.0+20160505185910",
-    "node": "registry:dt/node#6.0.0+20160720070758"
+    "node": "registry:dt/node#6.0.0+20160720070758",
+    "pouchdb": "registry:dt/pouchdb#5.4.4+20160724064500"
   }
 }
