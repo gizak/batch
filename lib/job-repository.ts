@@ -10,8 +10,9 @@ export class JobRepository {
 	protected jobInsts: Datastore
 	protected jobExecs: Datastore
 	protected stepExecs: Datastore
-
+	private counter: number
 	constructor(opts: any) {
+		this.counter = 0
 		this.options = opts
 		this.options.jobs = opts.jobs || {}
 		this.options.logs = opts.logs || {}
@@ -28,6 +29,9 @@ export class JobRepository {
 		return new NullStore()
 	}
 
+	newId(): number{
+		return this.counter++
+	}
 	init(): Promise<any> {
 		return Promise.all(['jobs','logs','jobInsts','jobExecs','stepExecs'].map(v => {
 			this[v] = this.getDatastore(this.options[v].datastore)
@@ -57,8 +61,16 @@ export class JobRepository {
 		})
 	}
 
-	addJobInstance(jobid: string): Promise<string> {
-		return new Promise((resolve, reject) => {
+	addJobInstance(jobid: string): Promise<number> {
+		return this.getJob(jobid).then(job => {
+			if (!job) {
+				throw new Error("Job "+jobid+"non-exists")
+			}
+			return this.newId()
+		}).then((n: number) => {
+			return this.jobInsts.insert({id:n, job: jobid, status: 'CREATED'}).then(()=>{
+				return n
+			})
 		})
 	}
 
