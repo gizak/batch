@@ -2,11 +2,11 @@ import {Job} from './Job'
 
 export class JobInstance {
 	private job: Job
-	private id: number
+	private id: string
 	private jobId: string
 	private status: string
 
-	constructor(jobo: Job, id: number) {
+	constructor(jobo: Job, id: string) {
 		this.job = jobo
 		this.id = id
 		this.jobId = jobo.id
@@ -15,7 +15,7 @@ export class JobInstance {
 	 * getInstanceId
 	 * @return job instance id
 	 */
-	getInstanceId(): number {
+	getInstanceId(): string {
 		return this.id
 	}
 	/**

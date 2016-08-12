@@ -1,6 +1,10 @@
 import {JobRepository} from './job-repository'
 import {BatchRuntime} from './runtime'
-import {JobInstance} from './job-instance';
+import {JobInstance} from './job-instance'
+import * as Debug from 'debug'
+
+const debug = Debug('JobOperator')
+
 /**
  * JobOperator
  */
@@ -8,6 +12,7 @@ export class JobOperator {
 	constructor() { }
 
 	loadJob(jobfile: string): Promise<string> {
+		debug('Load job: %s', jobfile)
 		return BatchRuntime.getJobRepository().addJob(jobfile)
 	}
 
@@ -24,9 +29,20 @@ export class JobOperator {
 			const fpath = job.path
 			delete require.cache[fpath]
 			const jobo = require(fpath)
-			return BatchRuntime.getJobRepository().addJobInstance(jobid).then((n: number) => {
-				return new JobInstance(jobo, n)
+			return BatchRuntime.getJobRepository().regJobInstance(jobid).then((id: string) => {
+				const ji = new JobInstance(jobo, id)
+				debug('Create job %s instance %s', jobo.id, id)
+				BatchRuntime.getJobRepository().addJobInstance(ji)
+				return ji
 			})
 		})
+	}
+
+	startJobInst(jid) {
+
+	}
+
+	_dumpRuntimeDS(): void {
+		BatchRuntime.getJobRepository()._dumpAll()
 	}
 }

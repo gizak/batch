@@ -25,6 +25,8 @@ export enum MetricType {
 	WRITE_SKIPCOUNT
 }
 
+const debug = Debug('BatchRuntime')
+
 /**
  * BatchRuntime
  */
@@ -33,6 +35,8 @@ export class BatchRuntime {
 
 	public static initRepository(opts: any): Promise<void> {
 		BatchRuntime.repo = new JobRepository(opts)
+		debug('Init repo with options:')
+		debug(opts)
 		return BatchRuntime.repo.init()
 	}
 

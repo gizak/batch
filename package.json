@@ -4,7 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "node --harmony test/index.js",
+    "test": "DEBUG=* node --harmony test/index.js",
     "build": "tsc -p ."
   },
   "repository": {
