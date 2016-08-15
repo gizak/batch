@@ -3,6 +3,7 @@ import {JobRepository} from './job-repository'
 import * as Koa from 'koa'
 import * as Debug from 'debug'
 import * as Router from 'koa-router'
+import * as Events from 'events'
 
 export enum BatchStatus {
 	STARTING,
@@ -32,6 +33,11 @@ const debug = Debug('BatchRuntime')
  */
 export class BatchRuntime {
 	private static repo: JobRepository
+	private static evtHub: Events.EventEmitter
+
+	public static initEventHub(): void {
+		BatchRuntime.evtHub = new Events.EventEmitter()
+	}
 
 	public static initRepository(opts: any): Promise<void> {
 		BatchRuntime.repo = new JobRepository(opts)
@@ -49,5 +55,13 @@ export class BatchRuntime {
 
 	public static getJobOperator(): JobOperator {
 		return new JobOperator()
+	}
+
+	public static emit(event: string, ...rest): boolean {
+		return BatchRuntime.evtHub.emit(event, ...rest)
+	}
+
+	public static on(event: string, listener: Function): Events.EventEmitter {
+		return BatchRuntime.evtHub.on(event, listener)
 	}
 }
