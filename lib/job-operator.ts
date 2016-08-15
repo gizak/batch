@@ -39,6 +39,7 @@ export class JobOperator {
 	}
 
 	startJobInst(jid) {
+		const ji = BatchRuntime.getJobRepository().getJobInstance(jid)
 
 	}
 

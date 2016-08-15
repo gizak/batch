@@ -90,6 +90,10 @@ export class JobRepository {
 		return ji
 	}
 
+	getJobInstance(jiid: string): JobInstance {
+		return this.ctJobInsts[jiid]
+	}
+
 	getJobIds(): Promise<string[]> {
 		return new Promise((resolve, reject) => {
 			this.jobs.find({}).then(docs => { resolve(docs.map(o => { return o.id })) })

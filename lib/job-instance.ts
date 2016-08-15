@@ -1,4 +1,4 @@
-import {Job} from './Job'
+import {Job} from './job'
 
 export class JobInstance {
 	private job: Job
@@ -24,5 +24,9 @@ export class JobInstance {
 	 */
 	getJobName(): string {
 		return this.job.id
+	}
+
+	getJob(): Job {
+		return this.job
 	}
 }
