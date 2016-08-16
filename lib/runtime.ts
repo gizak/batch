@@ -36,7 +36,11 @@ export class BatchRuntime {
 	private static evtHub: Events.EventEmitter
 
 	public static initEventHub(): void {
+		debug('Init event hub')
 		BatchRuntime.evtHub = new Events.EventEmitter()
+
+		this.evtHub.on('START_JOB_INSTANCE', (jiid: string)=>{
+		})
 	}
 
 	public static initRepository(opts: any): Promise<void> {
@@ -58,10 +62,13 @@ export class BatchRuntime {
 	}
 
 	public static emit(event: string, ...rest): boolean {
+		debug('Event: %s', event)
+		debug(rest)
 		return BatchRuntime.evtHub.emit(event, ...rest)
 	}
 
 	public static on(event: string, listener: Function): Events.EventEmitter {
+		debug('Listen event %s', event)
 		return BatchRuntime.evtHub.on(event, listener)
 	}
 }

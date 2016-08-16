@@ -29,4 +29,11 @@ export class JobInstance {
 	getJob(): Job {
 		return this.job
 	}
+
+	setStatus(s: string): this {
+		this.status = s
+		return this
+	}
+
+	getStatus(): string { return this.status }
 }

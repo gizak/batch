@@ -73,6 +73,12 @@ export class JobRepository {
 		})
 	}
 
+	setJobInstStatus(jobInstId: string, status: string): Promise<JobInstance> {
+		return this.jobInsts.update({_id:jobInstId}, {$set: {status: status}}).then(()=>{
+			return this.getJobInstance(jobInstId).setStatus(status)
+		})
+	}
+
 	regJobInstance(jobid: string): Promise<string> {
 		return this.getJob(jobid).then(job => {
 			if (!job) {
