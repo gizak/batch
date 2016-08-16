@@ -74,7 +74,7 @@ export class JobRepository {
 	}
 
 	setJobInstStatus(jobInstId: string, status: string): Promise<JobInstance> {
-		return this.jobInsts.update({_id:jobInstId}, {$set: {status: status}}).then(()=>{
+		return this.jobInsts.update({_id: jobInstId}, {$set: {status: status}}).then(() => {
 			return this.getJobInstance(jobInstId).setStatus(status)
 		})
 	}

@@ -2,6 +2,8 @@ import {JobRepository} from './job-repository'
 import {BatchRuntime} from './runtime'
 import {JobInstance} from './job-instance'
 import * as Debug from 'debug'
+import {Step} from './step'
+import {Chunk} from './chunk'
 
 const debug = Debug('JobOperator')
 
@@ -39,9 +41,19 @@ export class JobOperator {
 	}
 
 	startJobInst(jid) {
-		BatchRuntime.emit('START_JOB_INSTANCE', jid)
+		BatchRuntime.emit('JOB_INST_START', jid)
 		const ji = BatchRuntime.getJobRepository().getJobInstance(jid)
+		const j = ji.getJob()
+		j.listener.beforeJob()
+		BatchRuntime.emit('JOB_INST_STARTED')
 
+		for (const s of j.steps) {
+			if (s.chunk) {
+				const ck = s.chunk
+				ck.beforeChunk()
+				ck.beforeRead()
+			}
+		}
 	}
 
 	_dumpRuntimeDS(): void {

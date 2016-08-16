@@ -6,7 +6,7 @@ export interface Job {
 	id: string
 	restartable?: boolean
 	listener?: JobListener
-	steps: Step
+	steps: Step[]
 }
 
 export interface JobListener {
