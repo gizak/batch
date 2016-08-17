@@ -13,3 +13,6 @@ export interface JobListener {
 	beforeJob(): void
 	afterJob(): void
 }
+
+export class Job {
+}

@@ -4,7 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "DEBUG=* node --harmony test/index.js",
+    "test": "DEBUG=* node test/index.js",
     "build": "tsc -p .",
     "win:test": "node test/index.js"
   },
@@ -30,11 +30,12 @@
     "typescript": "^1.8.10"
   },
   "dependencies": {
+    "bunyan": "^1.8.1",
     "debug": "^2.2.0",
+    "eslint": "^3.3.1",
     "koa": "^1.2.1",
     "koa-router": "^5.4.0",
-    "mongodb": "^2.2.5",
-    "nedb": "^1.8.0",
+    "mongodb": "^2.2.6",
     "pouchdb": "^5.4.5"
   }
 }

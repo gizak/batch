@@ -5,8 +5,21 @@
     "koa": "registry:dt/koa#2.0.0+20160724024233",
     "koa-router": "registry:dt/koa-router#7.0.0+20160314083221",
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
-    "nedb": "registry:dt/nedb#0.0.0+20160505185910",
     "node": "registry:dt/node#6.0.0+20160720070758",
-    "pouchdb": "registry:dt/pouchdb#5.4.4+20160724064500"
+    "pouchdb": "registry:dt/pouchdb#5.4.4+20160724064500",
+    "pouchdb-adapter-fruitdown": "registry:dt/pouchdb-adapter-fruitdown#5.4.4+20160724064500",
+    "pouchdb-adapter-http": "registry:dt/pouchdb-adapter-http#5.4.4+20160724064500",
+    "pouchdb-adapter-idb": "registry:dt/pouchdb-adapter-idb#5.4.4+20160724064500",
+    "pouchdb-adapter-leveldb": "registry:dt/pouchdb-adapter-leveldb#5.4.4+20160724064500",
+    "pouchdb-adapter-localstorage": "registry:dt/pouchdb-adapter-localstorage#5.4.4+20160724064500",
+    "pouchdb-adapter-memory": "registry:dt/pouchdb-adapter-memory#5.4.4+20160724064500",
+    "pouchdb-adapter-node-websql": "registry:dt/pouchdb-adapter-node-websql#5.4.4+20160724064500",
+    "pouchdb-adapter-websql": "registry:dt/pouchdb-adapter-websql#5.4.4+20160724064500",
+    "pouchdb-browser": "registry:dt/pouchdb-browser#5.4.4+20160724064500",
+    "pouchdb-core": "registry:dt/pouchdb-core#5.4.4+20160724064500",
+    "pouchdb-http": "registry:dt/pouchdb-http#5.4.4+20160724064500",
+    "pouchdb-mapreduce": "registry:dt/pouchdb-mapreduce#5.4.4+20160724064500",
+    "pouchdb-node": "registry:dt/pouchdb-node#5.4.4+20160724064500",
+    "pouchdb-replication": "registry:dt/pouchdb-replication#5.4.4+20160724064500"
   }
 }

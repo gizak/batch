@@ -44,7 +44,7 @@ export class JobOperator {
 		BatchRuntime.emit('JOB_INST_STARTING', jid)
 		const ji = BatchRuntime.getJobRepository().getJobInstance(jid)
 		const j = ji.getJob()
-		if (j.listener && j.listener.beforeJob)	
+		if (j.listener && j.listener.beforeJob)
 			j.listener.beforeJob()
 		BatchRuntime.emit('JOB_INST_STARTED')
 
@@ -56,8 +56,8 @@ export class JobOperator {
 				const ck = s.chunk
 				ck.beforeChunk()
 				ck.open()
-				
-				let isCont = true 
+
+				let isCont = true
 				while (isCont) {
 					// read
 					ck.beforeRead()
@@ -72,7 +72,7 @@ export class JobOperator {
 					ck.beforeProcess(item)
 					const result = ck.processItem(item)
 					ck.afterProcess(item, result)
-					
+
 					// write
 					ck.beforeWrite([result])
 					ck.writeItem([result])
