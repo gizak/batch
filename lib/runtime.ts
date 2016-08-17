@@ -39,7 +39,7 @@ export class BatchRuntime {
 		debug('Init event hub')
 		BatchRuntime.evtHub = new Events.EventEmitter()
 
-		this.evtHub.on('JOB_INST_START', (jiid: string) => {
+		this.evtHub.on('JOB_INST_STARTING', (jiid: string) => {
 		})
 
 		this.evtHub.on('JOB_INST_STARTED', () => {})

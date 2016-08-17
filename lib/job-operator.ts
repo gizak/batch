@@ -41,19 +41,56 @@ export class JobOperator {
 	}
 
 	startJobInst(jid) {
-		BatchRuntime.emit('JOB_INST_START', jid)
+		BatchRuntime.emit('JOB_INST_STARTING', jid)
 		const ji = BatchRuntime.getJobRepository().getJobInstance(jid)
 		const j = ji.getJob()
-		j.listener.beforeJob()
+		if (j.listener && j.listener.beforeJob)	
+			j.listener.beforeJob()
 		BatchRuntime.emit('JOB_INST_STARTED')
 
 		for (const s of j.steps) {
+			console.log(s)
+			s.beforeStep()
+
 			if (s.chunk) {
 				const ck = s.chunk
 				ck.beforeChunk()
-				ck.beforeRead()
+				ck.open()
+				
+				let isCont = true 
+				while (isCont) {
+					// read
+					ck.beforeRead()
+					const item = ck.readItem()
+					if (!item) {
+						isCont = false
+						continue
+					}
+					ck.afterRead(item)
+
+					// process
+					ck.beforeProcess(item)
+					const result = ck.processItem(item)
+					ck.afterProcess(item, result)
+					
+					// write
+					ck.beforeWrite([result])
+					ck.writeItem([result])
+					ck.afterWrite([result])
+				}
+
+				ck.afterChunk()
 			}
+
+			else if (s.batchlet) {
+				const bl = s.batchlet
+				bl.process()
+			}
+
+			s.afterStep()
 		}
+		if (j.listener && j.listener.afterJob)
+			j.listener.afterJob()
 	}
 
 	_dumpRuntimeDS(): void {

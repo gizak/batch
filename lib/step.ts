@@ -1,12 +1,13 @@
 import {Chunk} from './chunk'
 import {Batchlet} from './batchlet'
 
-export interface Step {
+export abstract class Step {
 	id: string
-	listener?: StepListener
-	context?: StepContext
-	chunk?: Chunk
-	batchlet?: Batchlet
+	beforeStep(): void {}
+	afterStep(): void {}
+	context: StepContext
+	chunk: Chunk
+	batchlet: Batchlet
 }
 
 export interface StepListener {
