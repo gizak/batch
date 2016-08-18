@@ -4,7 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "DEBUG=* node test/index.js",
+    "test": "node test/index.js",
     "build": "tsc -p .",
     "win:test": "node test/index.js"
   },
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/gizak/batch#readme",
   "devDependencies": {
+    "cross-env": "^2.0.0",
     "eslint": "^3.0.1",
     "eslint-plugin-react": "^5.2.2",
     "typescript": "^1.8.10"
