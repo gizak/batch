@@ -4,7 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "test": "node test/index.js",
+    "test": "node test/index.js | $(npm bin)/bunyan -o short",
     "build": "tsc -p .",
     "win:test": "node test/index.js"
   },

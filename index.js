@@ -1,4 +1,4 @@
-const runtime = require('./build/lib/runtime')
+const runtime = require('./build/runtime')
 
 exports.Runtime = runtime.Runtime
 exports.getJobContext = ''

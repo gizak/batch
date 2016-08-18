@@ -1,17 +1,28 @@
+import * as PouchDB from 'pouchdb'
+import * as bunyan from 'bunyan'
+import {Repository} from './runtime/repository'
 
 interface JobInst {}
 interface JobExec {}
 interface StepExec {}
 
 export class Operator {
-	private jobNames: string[]
+	private db: PouchDB.Database<{}>
+	private log: bunyan.Logger
+	private repo: Repository
+
+	constructor(db: PouchDB.Database<{}>, log: bunyan.Logger, repo: Repository) {
+		this.db = db
+		this.log = log
+		this.repo = repo
+	}
 
 	jobInstCnt(jname: string): number {
-		return 0
+		return this.repo.jobInst.length
 	}
 
 	jobInsts(jname: string, start?: number, count?: number): JobInst[] {
-		return []
+		return this.repo.jobInst.slice(start).slice(0, count)
 	}
 
 	runningExecs(jname: string): string[] {
@@ -47,4 +58,4 @@ export class Operator {
 	stepExecs(execId: string): StepExec[] {
 		return []
 	}
-} 
+}
