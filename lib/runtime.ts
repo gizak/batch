@@ -3,6 +3,8 @@ import * as bunyan from 'bunyan'
 import {Operator} from './operator'
 import {Repository} from './runtime/repository'
 
+export enum Status {STARTING, STARTED, STOPPING, STOPPED, FAILED, COMPLETED, ABANDONED}
+
 export class Runtime {
 	private static db: PouchDB.Database<{}>
 	private static repo: Repository

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node test/index.js | $(npm bin)/bunyan -o short",
     "build": "tsc -p .",
-    "win:test": "node test/index.js"
+    "win:test": "node test/index.js | bunyan -o short"
   },
   "repository": {
     "type": "git",
