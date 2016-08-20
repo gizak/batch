@@ -11,6 +11,7 @@ export class JobInstance {
 		this.id = id
 		this.jobId = jobo.id
 	}
+
 	/**
 	 * getInstanceId
 	 * @return job instance id

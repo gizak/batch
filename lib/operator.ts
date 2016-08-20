@@ -1,6 +1,7 @@
 import * as PouchDB from 'pouchdb'
 import * as bunyan from 'bunyan'
 import {Repository} from './runtime/repository'
+import {Job} from './runtime/job'
 
 interface JobInst {}
 interface JobExec {}
@@ -18,11 +19,11 @@ export class Operator {
 	}
 
 	jobInstCnt(jname: string): number {
-		return this.repo.jobInst.length
+		return this.repo.jobInsts.length
 	}
 
 	jobInsts(jname: string, start?: number, count?: number): JobInst[] {
-		return this.repo.jobInst.slice(start).slice(0, count)
+		return this.repo.jobInsts.slice(start).slice(0, count)
 	}
 
 	runningExecs(jname: string): string[] {
@@ -30,6 +31,13 @@ export class Operator {
 	}
 
 	start(jfile: string): string {
+		const path = require.resolve(jfile)
+		const obj = require(path)
+		delete require.cache[path]
+
+		const j = objToJob(obj)
+		j.path = path
+
 		return ''
 	}
 
@@ -58,4 +66,15 @@ export class Operator {
 	stepExecs(execId: string): StepExec[] {
 		return []
 	}
+}
+
+function objToJob(obj: any): Job {
+	const j = new Job()
+	Object.getOwnPropertyNames(obj).forEach((k) => {
+		if (obj[k]) {
+			j[k] = obj[k]
+		}
+	})
+
+	return j
 }

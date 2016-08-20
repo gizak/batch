@@ -15,7 +15,7 @@ export class Runtime {
 		opt.store = opt.store || {}
 		opt.log = opt.log || {}
 
-		const dbn: string = opt.store.name || 'batch.db'
+		const dbn: string = opt.store.name || 'batchdb'
 		const dbOpts: any  = opt.store.options || {}
 		const logOpts: any = opt.log
 		logOpts.name = logOpts.name || 'batch'

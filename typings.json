@@ -21,6 +21,7 @@
     "pouchdb-http": "registry:dt/pouchdb-http#5.4.4+20160724064500",
     "pouchdb-mapreduce": "registry:dt/pouchdb-mapreduce#5.4.4+20160724064500",
     "pouchdb-node": "registry:dt/pouchdb-node#5.4.4+20160724064500",
-    "pouchdb-replication": "registry:dt/pouchdb-replication#5.4.4+20160724064500"
+    "pouchdb-replication": "registry:dt/pouchdb-replication#5.4.4+20160724064500",
+    "shortid": "registry:dt/shortid#0.0.0+20160316155526"
   }
 }
