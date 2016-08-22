@@ -35,8 +35,6 @@ export class Job {
 		this._id = this._instId
 	}
 
-	before() {
-		console.log(this._id)
-	}
+	before() {}
 	after() {}
 }

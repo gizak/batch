@@ -2,6 +2,10 @@ import * as PouchDB from 'pouchdb'
 import * as bunyan from 'bunyan'
 import {Repository} from './runtime/repository'
 import {Job} from './runtime/job'
+import {Step} from './runtime/step'
+import {Chunk} from './runtime/chunk'
+import {Batchlet} from './runtime/batchlet'
+import * as _ from 'lodash'
 
 interface JobInst {}
 interface JobExec {}
@@ -30,14 +34,50 @@ export class Operator {
 		return []
 	}
 
+	private _startJobInst(j: Job) {
+		for (const step of j.steps) {
+			step.before()
+
+			if (step.chunk) {
+				
+				const ck = step.chunk
+				ck.reader.open()
+				ck.writer.open()
+				ck.before()
+
+				const isCont = true				
+				ck.reader.before()
+				for (let item =ck.reader.readItem(); isCont && item != null; item = ck.reader.readItem()) {
+					ck.reader.after()
+					// process
+					ck.processor.before(item)
+					const result = ck.processor.processItem(item)
+					ck.processor.after(item, result)
+					// write
+					ck.writer.before([result])
+					ck.writer.writeItems([result])
+					ck.writer.after([result])
+
+					ck.before()
+				}
+
+				ck.reader.close()
+				ck.writer.close()
+				ck.after()
+			}
+			step.after()
+		}
+	}
+
 	start(jfile: string): string {
 		const path = require.resolve(jfile)
 		const obj = require(path)
 		delete require.cache[path]
 
-		const j = objToJob(obj)
+		const j = _objToJob(obj)
 		j.path = path
 
+		this._startJobInst(j)
 		return ''
 	}
 
@@ -68,13 +108,16 @@ export class Operator {
 	}
 }
 
-function objToJob(obj: any): Job {
-	const j = new Job()
-	Object.getOwnPropertyNames(obj).forEach((k) => {
-		if (obj[k]) {
-			j[k] = obj[k]
-		}
-	})
+function _objToJob(obj: any): Job {
+	_.defaultsDeep(obj,new Job())
 
-	return j
+	if (obj.steps) {
+		for (const step of obj.steps) {
+			if (step.chunk) { _.defaultsDeep(step.chunk, new Chunk()) }
+			if (step.batchlet) { _.defaultsDeep(step.batchlet, new Batchlet()) }
+		}
+	} else {
+		throw new TypeError(`${obj.name} should provide steps`)
+	}
+	return obj
 }

@@ -5,6 +5,7 @@
     "debug": "registry:dt/debug#0.0.0+20160317120654",
     "koa": "registry:dt/koa#2.0.0+20160724024233",
     "koa-router": "registry:dt/koa-router#7.0.0+20160314083221",
+    "lodash": "registry:dt/lodash#4.14.0+20160817155621",
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
     "node": "registry:dt/node#6.0.0+20160720070758",
     "pouchdb": "registry:dt/pouchdb#5.4.4+20160724064500",
