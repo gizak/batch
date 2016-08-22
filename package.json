@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test/index.js | $(npm bin)/bunyan -o short",
-    "build": "tsc -p .",
+    "build": "$(npm bin)/tsc -p .",
     "win:test": "node test/index.js | bunyan -o short"
   },
   "repository": {
@@ -28,10 +28,11 @@
     "cross-env": "^2.0.0",
     "eslint": "^3.0.1",
     "eslint-plugin-react": "^5.2.2",
-    "typescript": "^1.8.10"
+    "typescript": "^2.1.0-dev.20160822"
   },
   "dependencies": {
     "bunyan": "^1.8.1",
+    "core-decorators": "^0.12.3",
     "debug": "^2.2.0",
     "eslint": "^3.3.1",
     "koa": "^1.2.1",

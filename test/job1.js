@@ -1,22 +1,30 @@
 const baseUrl = 'http://jsonplaceholder.typicode.com'
 
-const chunker = {
+const data = [0, 1, 2, 3, 4, 5, 6]
+let eData = []
+
+const reader = {
 	open: (chk) => {
-		console.log('open')
+		eData = data[Symbol.iterator]()
+		console.log('[reader] open')
 	},
 	readItem: () => {
-		console.log('readItem')
-		return {}
+		const v = eData.next().value
+		console.log('[reader] readItem: ' + v)
+		return v
 	},
 	close: () => {
-		console.log('close')
+		console.log('[reader] close')
 	},
 	checkpointinfo: () => {
-		console.log('checkpoint')
+		console.log('[reader] checkpoint')
 		return {}
-	},
+	}
+}
+
+const processor = {
 	processItem: (item) => {
-		console.log('processItem')
+		console.log('[processor] processItem')
 		return {}
 	}
 }
@@ -38,9 +46,9 @@ module.exports = {
 		{
 			id: 'step1',
 			chunk: {
-				reader: chunker,
-				processor: chunker,
-				writer: chunker,
+				reader: reader,
+				processor: processor,
+				writer: {},
 				itemCount: 1
 			}
 		},

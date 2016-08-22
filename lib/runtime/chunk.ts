@@ -1,42 +1,80 @@
+import {enumerable} from 'core-decorators'
+
 export class ItemReader {
-    open(chkpt?: any):void {}
-	close():void {}
+	@enumerable
+	open(chkpt?: any): void { }
+
+	@enumerable
+	close(): void { }
+
+	@enumerable
 	readItem(): any { return null }
-    checkpointInfo(): any {}
-    before() {}
-    after() {}
-    onError(err: any) {}
+
+	@enumerable
+	checkpointInfo(): any { }
+
+	@enumerable
+	before() { }
+
+	@enumerable
+	after() { }
+
+	@enumerable
+	onError(err: any) { }
 }
 
 export class ItemProcessor {
-    before(item: any) {}
-    processItem(item: any): any { return item}
-    after(item: any, result: any) {}
-    onError(item: any, err: any) {}
+	@enumerable
+	before(item: any) { }
+
+	@enumerable
+	processItem(item: any): any { return item }
+
+	@enumerable
+	after(item: any, result: any) { }
+
+	@enumerable
+	onError(item: any, err: any) { }
 }
 
 export class ItemWriter {
-    open(chkpt?: any): void {}
-    close(): void {}
-    writeItems(items: any[]) {}
-    checkpointInfo(): any {}
-    before(items: any[]) {}
-    after(items: any[]) {}
-    onError(items: any[], err: any) {}
+	@enumerable
+	open(chkpt?: any): void { }
+
+	@enumerable
+	close(): void { }
+
+	@enumerable
+	writeItems(items: any[]) { }
+
+	@enumerable
+	checkpointInfo(): any { }
+
+	@enumerable
+	before(items: any[]) { }
+
+	@enumerable
+	after(items: any[]) { }
+
+	@enumerable
+	onError(items: any[], err: any) { }
 }
 
 export class Chunk {
-    public reader: ItemReader
-    public writer: ItemWriter
-    public processor: ItemProcessor
-    
-    before():any {}
-    after(): any {}
-    onError(err: any) {}
+	public reader: ItemReader
+	public writer: ItemWriter
+	public processor: ItemProcessor
 
-    constructor() {
-        this.reader = new ItemReader()
-        this.processor = new ItemProcessor()
-        this.writer = new ItemWriter()
-    }
+	@enumerable
+	before(): any { }
+	@enumerable
+	after(): any { }
+	@enumerable
+	onError(err: any) { }
+
+	constructor() {
+		this.reader = new ItemReader()
+		this.processor = new ItemProcessor()
+		this.writer = new ItemWriter()
+	}
 }

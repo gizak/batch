@@ -1,6 +1,7 @@
 import {Step} from './step'
 import {Status} from '../runtime'
 import * as shortid from 'shortid'
+import {enumerable} from 'core-decorators'
 
 export class JobContext {
 	private _name: string
@@ -35,6 +36,9 @@ export class Job {
 		this._id = this._instId
 	}
 
+	@enumerable
 	before() {}
+
+	@enumerable
 	after() {}
 }

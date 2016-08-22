@@ -35,19 +35,20 @@ export class Operator {
 	}
 
 	private _startJobInst(j: Job) {
+		j.before()
 		for (const step of j.steps) {
 			step.before()
 
 			if (step.chunk) {
-				
+
 				const ck = step.chunk
 				ck.reader.open()
 				ck.writer.open()
 				ck.before()
 
-				const isCont = true				
+				const isCont = true
 				ck.reader.before()
-				for (let item =ck.reader.readItem(); isCont && item != null; item = ck.reader.readItem()) {
+				for (let item = ck.reader.readItem(); isCont && item != null; item = ck.reader.readItem()) {
 					ck.reader.after()
 					// process
 					ck.processor.before(item)
@@ -67,6 +68,7 @@ export class Operator {
 			}
 			step.after()
 		}
+		j.after()
 	}
 
 	start(jfile: string): string {
@@ -109,10 +111,11 @@ export class Operator {
 }
 
 function _objToJob(obj: any): Job {
-	_.defaultsDeep(obj,new Job())
-
+	const j = new Job()
+	_.defaultsDeep(obj, new Job())
 	if (obj.steps) {
 		for (const step of obj.steps) {
+			_.defaultsDeep(step, new Step())
 			if (step.chunk) { _.defaultsDeep(step.chunk, new Chunk()) }
 			if (step.batchlet) { _.defaultsDeep(step.batchlet, new Batchlet()) }
 		}

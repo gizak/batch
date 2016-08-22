@@ -1,12 +1,18 @@
 import {Status} from '../runtime'
 import {Chunk} from './chunk'
 import {Batchlet} from './batchlet'
+import {enumerable} from 'core-decorators'
+import {setPropsEnum} from '../helpers'
 
 export class Step {
-	chunk: Chunk
-	batchlet: Batchlet
-	before() {}
-	after() {}
+	public chunk: Chunk
+	public batchlet: Batchlet
+
+	@enumerable
+	public before() {}
+
+	@enumerable
+	public after() {}
 
 	constructor() {
 		this.chunk = null
@@ -28,3 +34,4 @@ export class StepContext {
 	get exitStatus(): string { return ''}
 	set exitStatus(s: string) {}
 }
+// setPropsEnum(Step.propertype, ['before',])
