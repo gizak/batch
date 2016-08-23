@@ -2,7 +2,6 @@ import {Status} from '../runtime'
 import {Chunk} from './chunk'
 import {Batchlet} from './batchlet'
 import {enumerable} from 'core-decorators'
-import {setPropsEnum} from '../helpers'
 
 export class Step {
 	public chunk: Chunk
@@ -20,6 +19,37 @@ export class Step {
 	}
 }
 
+export class StepExec {
+	private _started: Date
+	private _ended: Date
+	private _status: Status
+	private _step: string
+
+	execId(): string { return '' }
+	stepName(): string { return '' }
+
+	get status(): Status { return this._status }
+	set status(s: Status) {
+		this._status = s
+
+		switch (s) {
+			case Status.STARTED:
+			this._started = new Date()
+			break
+
+			case Status.STOPPED:
+			case Status.ABANDONED:
+			case Status.COMPLETED:
+			case Status.FAILED:
+			this._ended = new Date()
+		}
+	}
+
+	startTime(): Date { return this._started }
+	endTime(): Date { return this._ended }
+	exitStatus(): string { return '' }
+}
+
 export class StepContext {
 	private _name: string
 	private _transData: any
@@ -34,4 +64,3 @@ export class StepContext {
 	get exitStatus(): string { return ''}
 	set exitStatus(s: string) {}
 }
-// setPropsEnum(Step.propertype, ['before',])

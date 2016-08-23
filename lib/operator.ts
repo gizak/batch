@@ -1,15 +1,11 @@
 import * as PouchDB from 'pouchdb'
 import * as bunyan from 'bunyan'
 import {Repository} from './runtime/repository'
-import {Job} from './runtime/job'
-import {Step} from './runtime/step'
+import {Job, JobExec, JobContext} from './runtime/job'
+import {Step, StepExec} from './runtime/step'
 import {Chunk} from './runtime/chunk'
 import {Batchlet} from './runtime/batchlet'
 import * as _ from 'lodash'
-
-interface JobInst {}
-interface JobExec {}
-interface StepExec {}
 
 export class Operator {
 	private db: PouchDB.Database<{}>
@@ -26,7 +22,7 @@ export class Operator {
 		return this.repo.jobInsts.length
 	}
 
-	jobInsts(jname: string, start?: number, count?: number): JobInst[] {
+	jobInsts(jname: string, start?: number, count?: number): Job[] {
 		return this.repo.jobInsts.slice(start).slice(0, count)
 	}
 
@@ -93,11 +89,11 @@ export class Operator {
 
 	abandon(execId: string) {}
 
-	jobInst(execId: string): JobInst {
+	jobInst(execId: string): Job {
 		return null
 	}
 
-	jobExecs(inst: JobInst): JobExec[] {
+	jobExecs(inst: Job): JobExec[] {
 		return []
 	}
 
