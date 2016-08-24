@@ -29,31 +29,34 @@ export class Operator {
 
 	runningExecs(jname: string): string[] {
 		return this.repo.jobExecs
-		.filter((je: JobExec)=>{ 
-			return je.jobName() == jname
-		}).map((je: JobExec)=>{ 
+		.filter((je: JobExec) => {
+			return je.jobName() === jname
+		}).map((je: JobExec) => {
 			return je.execId()
 		})
 	}
 
 	private _startJobInst(j: Job) {
 		// create job context
-		const jc = new JobContext(j)
-		console.log(jc.jobExec())
-		jc.status = Status.STARTING
+		const je = new JobExec(j.id)
+		je.status = Status.STARTING
+		const jc = new JobContext(j, je)
+		this.repo.jobExecs.push(je)
 		this.repo.jobCtx.push(jc)
 
 		j.before()
-		jc.status = Status.STARTED
+		je.status = Status.STARTED
 
 		for (const step of j.steps) {
 			// step context
-			const sc = new StepContext(step)
-			sc.status = Status.STARTING
-			this.repo.StepCtx.push(sc)
+			const se = new StepExec(je.execId(), step.id)
+			se.status = Status.STARTING
+			this.repo.stepExecs.push(se)
+			const sc = new StepContext(step, se)
+			this.repo.stepCtx.push(sc)
 
 			step.before()
-			sc.status = Status.STARTED
+			se.status = Status.STARTED
 
 			if (step.chunk) {
 
@@ -83,10 +86,10 @@ export class Operator {
 				ck.after()
 			}
 			step.after()
-			sc.status = Status.COMPLETED
+			se.status = Status.COMPLETED
 		}
 		j.after()
-		jc.status = Status.COMPLETED
+		je.status = Status.COMPLETED
 	}
 
 	start(jfile: string): string {
@@ -112,19 +115,39 @@ export class Operator {
 	abandon(execId: string) {}
 
 	jobInst(execId: string): Job {
-		return null
+		const jc = this.repo.jobCtx.find((jc: JobContext) => {
+			return jc.execId() === execId
+		})
+
+		if (!jc) { throw new Error('Could not find an alive job instance with execution ID: ' + execId)}
+
+		return this._jobInst(jc.instId())
+	}
+
+	_jobInst(jiid: string) {
+		return this.repo.jobInsts.find((ji: Job) => { return ji._id === jiid })
 	}
 
 	jobExecs(inst: Job): JobExec[] {
-		return []
+		const jcs = this.repo.jobCtx.filter((jc: JobContext) => {
+			return jc.instId() === inst._id
+		})
+
+		return jcs.map((jc: JobContext) => {
+			return this.jobExec(jc.execId())
+		})
 	}
 
 	jobExec(execId: string): JobExec {
-		return null
+		return this.repo.jobExecs.find((je: JobExec) => {
+			return je.execId() === execId
+		})
 	}
 
 	stepExecs(execId: string): StepExec[] {
-		return []
+		return this.repo.stepExecs.filter((se: StepExec) => {
+			return se.jobExecId() === execId
+		})
 	}
 }
 
@@ -138,7 +161,7 @@ function _objToJob(obj: any): Job {
 			if (step.batchlet) { _.defaultsDeep(step.batchlet, new Batchlet()) }
 		}
 	} else {
-		throw new TypeError(`${obj.name} should provide steps`)
+		throw new TypeError(`${obj.name} has no .steps`)
 	}
 	return obj
 }
