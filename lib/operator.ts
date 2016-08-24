@@ -36,7 +36,7 @@ export class Operator {
 		})
 	}
 
-	private _startJobInst(j: Job) {
+	private async _startJobInst(j: Job) {
 		// create job context
 		const je = new JobExec(j.id)
 		je.status = Status.STARTING
@@ -61,13 +61,13 @@ export class Operator {
 			if (step.chunk) {
 
 				const ck = step.chunk
-				ck.reader.open()
-				ck.writer.open()
+				await ck.reader.open()
+				await ck.writer.open()
 				ck.before()
 
 				const isCont = true
 				ck.reader.before()
-				for (let item = ck.reader.readItem(); isCont && item != null; item = ck.reader.readItem()) {
+				for (let item = await ck.reader.readItem(); isCont && item != null; item = await ck.reader.readItem()) {
 					ck.reader.after()
 					// process
 					ck.processor.before(item)
@@ -81,8 +81,8 @@ export class Operator {
 					ck.before()
 				}
 
-				ck.reader.close()
-				ck.writer.close()
+				await ck.reader.close()
+				await ck.writer.close()
 				ck.after()
 			}
 			step.after()
@@ -100,7 +100,7 @@ export class Operator {
 		const j = _objToJob(obj)
 		j.path = path
 
-		this._startJobInst(j)
+		setImmediate(() => { this._startJobInst(j) })
 		return ''
 	}
 
