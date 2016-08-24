@@ -1,8 +1,9 @@
 import * as PouchDB from 'pouchdb'
 import * as bunyan from 'bunyan'
+import {Status} from './runtime'
 import {Repository} from './runtime/repository'
 import {Job, JobExec, JobContext} from './runtime/job'
-import {Step, StepExec} from './runtime/step'
+import {Step, StepExec, StepContext} from './runtime/step'
 import {Chunk} from './runtime/chunk'
 import {Batchlet} from './runtime/batchlet'
 import * as _ from 'lodash'
@@ -27,13 +28,32 @@ export class Operator {
 	}
 
 	runningExecs(jname: string): string[] {
-		return []
+		return this.repo.jobExecs
+		.filter((je: JobExec)=>{ 
+			return je.jobName() == jname
+		}).map((je: JobExec)=>{ 
+			return je.execId()
+		})
 	}
 
 	private _startJobInst(j: Job) {
+		// create job context
+		const jc = new JobContext(j)
+		console.log(jc.jobExec())
+		jc.status = Status.STARTING
+		this.repo.jobCtx.push(jc)
+
 		j.before()
+		jc.status = Status.STARTED
+
 		for (const step of j.steps) {
+			// step context
+			const sc = new StepContext(step)
+			sc.status = Status.STARTING
+			this.repo.StepCtx.push(sc)
+
 			step.before()
+			sc.status = Status.STARTED
 
 			if (step.chunk) {
 
@@ -63,8 +83,10 @@ export class Operator {
 				ck.after()
 			}
 			step.after()
+			sc.status = Status.COMPLETED
 		}
 		j.after()
+		jc.status = Status.COMPLETED
 	}
 
 	start(jfile: string): string {

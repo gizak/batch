@@ -93,4 +93,5 @@ export class JobContext extends JobExec {
 	get transientUserData(): any {return this._transData}
 	set transientUserData(data: any) { this._transData = data }
 	instId(): string { return this._jobInst._id }
+	//jobExec(): JobExec { return }
 }
