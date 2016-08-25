@@ -32,6 +32,7 @@
     "typescript": "^2.1.0-dev.20160822"
   },
   "dependencies": {
+    "async": "^2.0.1",
     "bunyan": "^1.8.1",
     "core-decorators": "^0.12.3",
     "debug": "^2.2.0",

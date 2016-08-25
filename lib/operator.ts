@@ -7,6 +7,7 @@ import {Step, StepExec, StepContext} from './runtime/step'
 import {Chunk} from './runtime/chunk'
 import {Batchlet} from './runtime/batchlet'
 import * as _ from 'lodash'
+import {queue, parallel} from 'async'
 
 export class Operator {
 	private db: PouchDB.Database<{}>
@@ -29,11 +30,11 @@ export class Operator {
 
 	runningExecs(jname: string): string[] {
 		return this.repo.jobExecs
-		.filter((je: JobExec) => {
-			return je.jobName() === jname
-		}).map((je: JobExec) => {
-			return je.execId()
-		})
+			.filter((je: JobExec) => {
+				return je.jobName() === jname
+			}).map((je: JobExec) => {
+				return je.execId()
+			})
 	}
 
 	private async _startJobInst(j: Job) {
@@ -59,26 +60,71 @@ export class Operator {
 			se.status = Status.STARTED
 
 			if (step.chunk) {
-
+				// open
 				const ck = step.chunk
 				await ck.reader.open()
 				await ck.writer.open()
 				ck.before()
 
+				// init work queque
+				const worker = (task, cb) => { }
+				const con = 1
+				const q = queue(worker, con)
+
 				const isCont = true
+				let items = []
+				const ps = []
+
+				// parallel procress items
+				async function procItems() {
+					const workers = items.map((i) => {
+						return (callback) => {
+							// process
+							ck.processor.before(i)
+							Promise.resolve(ck.processor.processItem(i)).then(res => {
+								ck.processor.after(i, res)
+								callback(null, res)
+							}).catch(err => {
+								callback(err, null)
+							})
+						}
+					})
+					return new Promise((resolve, reject) => {
+						parallel(workers, (err, results) => {
+							if (err) { return reject(err) }
+							resolve(results)
+						})
+					})
+				}
+
+				// write multi results
+				async function writeResults(res) {
+					ck.writer.before(res)
+					await ck.writer.writeItems(res)
+					ck.writer.after(res)
+				}
+
 				ck.reader.before()
 				for (let item = await ck.reader.readItem(); isCont && item != null; item = await ck.reader.readItem()) {
 					ck.reader.after()
-					// process
-					ck.processor.before(item)
-					const result = ck.processor.processItem(item)
-					ck.processor.after(item, result)
-					// write
-					ck.writer.before([result])
-					ck.writer.writeItems([result])
-					ck.writer.after([result])
 
-					ck.before()
+					// round up items
+					items.push(item)
+					if (items.length === ck.itemCount) {
+						// process
+						const results = await procItems()
+						// write
+						await writeResults(results)
+						// reset
+						items = []
+					}
+
+					ck.reader.before()
+				}
+
+				// leftovers
+				if (items) {
+					await writeResults( await procItems() )
 				}
 
 				await ck.reader.close()
@@ -112,14 +158,14 @@ export class Operator {
 
 	}
 
-	abandon(execId: string) {}
+	abandon(execId: string) { }
 
 	jobInst(execId: string): Job {
 		const jc = this.repo.jobCtx.find((jc: JobContext) => {
 			return jc.execId() === execId
 		})
 
-		if (!jc) { throw new Error('Could not find an alive job instance with execution ID: ' + execId)}
+		if (!jc) { throw new Error('Could not find an alive job instance with execution ID: ' + execId) }
 
 		return this._jobInst(jc.instId())
 	}

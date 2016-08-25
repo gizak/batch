@@ -64,6 +64,7 @@ export class Chunk {
 	public reader: ItemReader
 	public writer: ItemWriter
 	public processor: ItemProcessor
+	public itemCount: number
 
 	@enumerable
 	before(): any { }
@@ -76,5 +77,6 @@ export class Chunk {
 		this.reader = new ItemReader()
 		this.processor = new ItemProcessor()
 		this.writer = new ItemWriter()
+		this.itemCount = 1
 	}
 }

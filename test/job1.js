@@ -6,26 +6,32 @@ let eData = []
 const reader = {
 	open: (chk) => {
 		eData = data[Symbol.iterator]()
-		console.log('[reader] open')
+		console.log('[reader]\t open')
 	},
 	readItem: () => {
 		const v = eData.next().value
-		console.log('[reader] readItem: ' + v)
+		console.log('[reader]\t readItem: ' + v)
 		return v
 	},
 	close: () => {
-		console.log('[reader] close')
+		console.log('[reader]\t close')
 	},
 	checkpointinfo: () => {
-		console.log('[reader] checkpoint')
+		console.log('[reader]\t checkpoint')
 		return {}
 	}
 }
 
 const processor = {
 	processItem: (item) => {
-		console.log('[processor] processItem')
-		return {}
+		console.log('[processor]\t processItem '+ item)
+		return item
+	}
+}
+
+const writer = {
+	writeItems: (res) => {
+		console.log('[writer]\t writeItems('+res.length +') ' + res)
 	}
 }
 
@@ -48,7 +54,7 @@ module.exports = {
 			chunk: {
 				reader: reader,
 				processor: processor,
-				writer: {},
+				writer: writer,
 				itemCount: 1
 			}
 		},
