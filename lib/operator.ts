@@ -139,7 +139,7 @@ export class Operator {
 	}
 
 	start(jfile: string): string {
-		const path = require.resolve(jfile)
+		const path = require('path').resolve(jfile)
 		const obj = require(path)
 		delete require.cache[path]
 
