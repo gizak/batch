@@ -1,47 +1,53 @@
 {
-  "name": "batch",
-  "version": "1.0.0",
-  "description": "Batch processing",
-  "main": "index.js",
-  "scripts": {
-    "test": "node test/index.js | $(npm bin)/bunyan -o short",
-    "build": "$(npm bin)/tsc -p .",
-    "win:test": "node test/index.js | bunyan -o short",
-    "win:build": "tsc -p ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gizak/batch.git"
-  },
-  "keywords": [
-    "batch",
-    "processing",
-    "jsr-352",
-    "typescript"
-  ],
-  "author": "gizak",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gizak/batch/issues"
-  },
-  "homepage": "https://github.com/gizak/batch#readme",
-  "devDependencies": {
-    "cross-env": "^2.0.0",
-    "eslint": "^3.0.1",
-    "eslint-plugin-react": "^5.2.2",
-    "typescript": "^2.1.0-dev.20160822"
-  },
-  "dependencies": {
-    "async": "^2.0.1",
-    "bunyan": "^1.8.1",
-    "core-decorators": "^0.12.3",
-    "debug": "^2.2.0",
-    "eslint": "^3.3.1",
-    "koa": "^1.2.1",
-    "koa-router": "^5.4.0",
-    "lodash": "^4.15.0",
-    "mongodb": "^2.2.6",
-    "pouchdb": "^5.4.5",
-    "shortid": "^2.2.6"
-  }
+    "name": "batch",
+    "version": "1.0.0",
+    "description": "Batch processing",
+    "main": "index.js",
+    "scripts": {
+	"deps": "npm install && $(npm bin)/typings install",
+	"test": "jest",
+	"build": "$(npm bin)/tsc -p .",
+	"win:test": "node test/index.js | bunyan -o short",
+	"win:build": "tsc -p ."
+    },
+    "repository": {
+	"type": "git",
+	"url": "git+https://github.com/gizak/batch.git"
+    },
+    "keywords": [
+	"batch",
+	"processing",
+	"jsr-352",
+	"typescript"
+    ],
+    "author": "gizak",
+    "license": "MIT",
+    "bugs": {
+	"url": "https://github.com/gizak/batch/issues"
+    },
+    "homepage": "https://github.com/gizak/batch#readme",
+    "devDependencies": {
+	"cross-env": "^2.0.0",
+	"eslint": "^3.0.1",
+	"eslint-plugin-react": "^5.2.2",
+	"jest": "^15.1.1",
+	"typescript": "^2.1.0-dev.20160822",
+	"typings": "^1.3.3"
+    },
+    "dependencies": {
+	"async": "^2.0.1",
+	"bunyan": "^1.8.1",
+	"core-decorators": "^0.12.3",
+	"debug": "^2.2.0",
+	"eslint": "^3.3.1",
+	"koa": "^1.2.1",
+	"koa-router": "^5.4.0",
+	"lodash": "^4.15.0",
+	"mongodb": "^2.2.6",
+	"pouchdb": "^5.4.5",
+	"shortid": "^2.2.6"
+    },
+    "jest": {
+	"testEnvironment": "node"
+    }
 }
