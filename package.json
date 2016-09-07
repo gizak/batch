@@ -4,11 +4,10 @@
     "description": "Batch processing",
     "main": "index.js",
     "scripts": {
-	"deps": "npm install && $(npm bin)/typings install",
-	"test": "jest",
-	"build": "$(npm bin)/tsc -p .",
-	"win:test": "node test/index.js | bunyan -o short",
-	"win:build": "tsc -p ."
+	"postinstall": "$(npm bin)/typings install",
+	"prepublish": "$(npm bin)/tsc -p .",
+	"pretest": "$(npm bin)/tsc -p .",
+	"test": "jest"
     },
     "repository": {
 	"type": "git",
