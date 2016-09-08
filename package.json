@@ -7,7 +7,7 @@
 	"postinstall": "$(npm bin)/typings install",
 	"prepublish": "$(npm bin)/tsc -p .",
 	"pretest": "$(npm bin)/tsc -p .",
-	"test": "jest"
+	"test": "jest --coverage"
     },
     "repository": {
 	"type": "git",
