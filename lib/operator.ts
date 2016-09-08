@@ -150,9 +150,11 @@ export class Operator {
         const path = require('path').resolve(jfile)
         delete require.cache[path]
         const obj = require(path)
-
+	
         const j = _objToJob(obj)
         j.path = path
+
+	this.repo.jobInsts.push(j)
         return j
     }
 
