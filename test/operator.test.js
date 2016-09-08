@@ -23,13 +23,13 @@ describe('JobOperator',()=>{
 	j = jo._load(jf)
 	expect(j).toBeDefined()
 	expect(j.path).toBeDefined()
+	expect(jo.repo.jobInsts.length).toEqual(1)
     })
 
     it('setups repo before run', ()=>{
 	const je = jo._before(j)
 	expect(je).toBeDefined()
 	expect(jo.repo.jobCtx.length).toEqual(1)
-	expect(jo.repo.jobInsts.length).toEqual(1)
 	expect(jo.repo.jobExecs.length).toEqual(1)
     })
 })
