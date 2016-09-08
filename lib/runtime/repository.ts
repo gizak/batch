@@ -1,18 +1,18 @@
-import {Job, JobContext, JobExec} from './job'
-import {StepContext, StepExec} from './step'
+import {Job, JobCtx, JobExec} from './job'
+import {StepCtx, StepExec} from './step'
 
 export class Repository {
-	public jobCtx: JobContext[]
+	public jobCtxs: JobCtx[]
 	public jobInsts: Job[]
 	public jobExecs: JobExec[]
-	public stepCtx: StepContext[]
+	public stepCtxs: StepCtx[]
 	public stepExecs: StepExec[]
 
 	constructor() {
-		this.jobCtx = []
+		this.jobCtxs = []
 		this.jobInsts = []
 		this.jobExecs = []
-		this.stepCtx = []
+		this.stepCtxs = []
 		this.stepExecs = []
 	}
 }

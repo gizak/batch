@@ -29,7 +29,13 @@ describe('JobOperator',()=>{
     it('setups repo before run', ()=>{
 	const je = jo._before(j)
 	expect(je).toBeDefined()
-	expect(jo.repo.jobCtx.length).toEqual(1)
+	expect(jo.repo.jobCtxs.length).toEqual(1)
 	expect(jo.repo.jobExecs.length).toEqual(1)
+    })
+
+    it('starts job instance', ()=>{
+	jo._startJobInst(j).then((d)=>{
+	    expect(d).toBeUndefined()
+	})
     })
 })

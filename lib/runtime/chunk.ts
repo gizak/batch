@@ -1,6 +1,11 @@
 import {enumerable} from 'core-decorators'
+import {JobCtx} from './job'
+import {StepCtx} from './step'
 
 export class ItemReader {
+	public stepCtx: StepCtx // stub
+	public jobCtx: JobCtx // stub
+
 	@enumerable
 	open(chkpt?: any): void { }
 
@@ -24,6 +29,9 @@ export class ItemReader {
 }
 
 export class ItemProcessor {
+	public stepCtx: StepCtx // stub
+	public jobCtx: JobCtx // stub
+
 	@enumerable
 	before(item: any) { }
 
@@ -38,6 +46,9 @@ export class ItemProcessor {
 }
 
 export class ItemWriter {
+	public stepCtx: StepCtx // stub
+	public jobCtx: JobCtx // stub
+
 	@enumerable
 	open(chkpt?: any): void { }
 
@@ -65,6 +76,10 @@ export class Chunk {
 	public writer: ItemWriter
 	public processor: ItemProcessor
 	public itemCount: number
+
+	public stepCtx: StepCtx // stub
+	public jobCtx: JobCtx // stub
+
 
 	@enumerable
 	before(): any { }

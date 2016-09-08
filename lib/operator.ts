@@ -2,226 +2,246 @@ import * as PouchDB from 'pouchdb'
 import * as bunyan from 'bunyan'
 import { Status } from './runtime'
 import { Repository } from './runtime/repository'
-import { Job, JobExec, JobContext } from './runtime/job'
-import { Step, StepExec, StepContext } from './runtime/step'
+import { Job, JobExec, JobCtx } from './runtime/job'
+import { Step, StepExec, StepCtx } from './runtime/step'
 import { Chunk } from './runtime/chunk'
 import { Batchlet } from './runtime/batchlet'
 import * as _ from 'lodash'
 import { queue, parallel } from 'async'
 
 export class Operator {
-    private db: PouchDB.Database<{}>
-    private log: bunyan.Logger
-    private repo: Repository
+	private db: PouchDB.Database<{}>
+	private log: bunyan.Logger
+	private repo: Repository
 
-    constructor(db: PouchDB.Database<{}>, log: bunyan.Logger, repo: Repository) {
-        this.db = db
-        this.log = log
-        this.repo = repo
-    }
+	constructor(db: PouchDB.Database<{}>, log: bunyan.Logger, repo: Repository) {
+		this.db = db
+		this.log = log
+		this.repo = repo
+	}
 
-    jobInstCnt(jname: string): number {
-        return this.repo.jobInsts.length
-    }
+	jobInstCnt(jname: string): number {
+		return this.repo.jobInsts.length
+	}
 
-    jobInsts(jname: string, start?: number, count?: number): Job[] {
-        return this.repo.jobInsts.slice(start).slice(0, count)
-    }
+	jobInsts(jname: string, start?: number, count?: number): Job[] {
+		return this.repo.jobInsts.slice(start).slice(0, count)
+	}
 
-    runningExecs(jname: string): string[] {
-        return this.repo.jobExecs
-            .filter((je: JobExec) => {
-                return je.jobName() === jname
-            }).map((je: JobExec) => {
-                return je.execId()
-            })
-    }
+	runningExecs(jname: string): string[] {
+		return this.repo.jobExecs
+			.filter((je: JobExec) => {
+				return je.jobName() === jname
+			}).map((je: JobExec) => {
+				return je.execId()
+			})
+	}
 
-    _before(j: Job): JobExec {
-        // create job context
-        const je = new JobExec(j.id)
-        je.status = Status.STARTING
-        const jc = new JobContext(j, je)
-        this.repo.jobExecs.push(je)
-        this.repo.jobCtx.push(jc)
+	_injectJob(j: Job, key: string, val: any) {
+		j[key] = val
+		this._injectSteps(j, key, val)
+	}
 
-        j.before()
-        return je
-    }
+	_injectSteps(j: Job, key: string, val: any) {
+		for (const step of j.steps) {
+			step[key] = val
+			if (step.chunk) {
+				step.chunk[key] = val
+				step.chunk.reader[key] = val
+				step.chunk.processor[key] = val
+				step.chunk.writer[key] = val
+			}
 
-    private async _startJobInst(j: Job) {
+			if (step.batchlet) {
+				step.batchlet[key] = val
+			}
+		}
+	}
 
+	_before(j: Job): JobExec {
+		// create job context
+		const je = new JobExec(j)
+		je.status = Status.STARTING
+		this.repo.jobExecs.push(je)
+		this.repo.jobCtxs.push(je.jobCtx())
+		this._injectJob(j, 'jobCtx', je.jobCtx())
 
-        const je = this._before(j)
-        je.status = Status.STARTED
+		j.before()
+		return je
+	}
 
-        for (const step of j.steps) {
-            // step context
-            const se = new StepExec(je.execId(), step.id)
-            se.status = Status.STARTING
-            this.repo.stepExecs.push(se)
-            const sc = new StepContext(step, se)
-            this.repo.stepCtx.push(sc)
+	private async _startJobInst(j: Job) {
 
-            step.before()
-            se.status = Status.STARTED
+		const je = this._before(j)
+		je.status = Status.STARTED
 
-            if (step.chunk) {
-                // open
-                const ck = step.chunk
-                await ck.reader.open()
-                await ck.writer.open()
-                ck.before()
+		for (const step of j.steps) {
+			// step context
+			const se = new StepExec(je.execId(), step.id)
+			se.status = Status.STARTING
+			this.repo.stepExecs.push(se)
+			const sc = new StepCtx(step, se)
+			this.repo.stepCtxs.push(sc)
 
-                // init work queque
-                const worker = (task, cb) => { }
-                const con = 1
-                const q = queue(worker, con)
+			step.before()
+			se.status = Status.STARTED
 
-                const isCont = true
-                let items = []
-                const ps = []
+			if (step.chunk) {
+				// open
+				const ck = step.chunk
+				await ck.reader.open()
+				await ck.writer.open()
+				ck.before()
 
-                // parallel procress items
-                async function procItems() {
-                    const workers = items.map((i) => {
-                        return (callback) => {
-                            // process
-                            ck.processor.before(i)
-                            Promise.resolve(ck.processor.processItem(i)).then(res => {
-                                ck.processor.after(i, res)
-                                callback(null, res)
-                            }).catch(err => {
-                                callback(err, null)
-                            })
-                        }
-                    })
-                    return new Promise((resolve, reject) => {
-                        parallel(workers, (err, results) => {
-                            if (err) { return reject(err) }
-                            resolve(results)
-                        })
-                    })
-                }
+				// init work queque
+				const worker = (task, cb) => { }
+				const con = 1
+				const q = queue(worker, con)
 
-                // write multi results
-                async function writeResults(res) {
-                    ck.writer.before(res)
-                    await ck.writer.writeItems(res)
-                    ck.writer.after(res)
-                }
+				const isCont = true
+				let items = []
+				const ps = []
 
-                ck.reader.before()
-                for (let item = await ck.reader.readItem(); isCont && item != null; item = await ck.reader.readItem()) {
-                    ck.reader.after()
+				// parallel procress items
+				async function procItems() {
+					const workers = items.map((i) => {
+						return (callback) => {
+							// process
+							ck.processor.before(i)
+							Promise.resolve(ck.processor.processItem(i)).then(res => {
+								ck.processor.after(i, res)
+								callback(null, res)
+							}).catch(err => {
+								callback(err, null)
+							})
+						}
+					})
+					return new Promise((resolve, reject) => {
+						parallel(workers, (err, results) => {
+							if (err) { return reject(err) }
+							resolve(results)
+						})
+					})
+				}
 
-                    // round up items
-                    items.push(item)
-                    if (items.length === ck.itemCount) {
-                        // process
-                        const results = await procItems()
-                        // write
-                        await writeResults(results)
-                        // reset
-                        items = []
-                    }
+				// write multi results
+				async function writeResults(res) {
+					ck.writer.before(res)
+					await ck.writer.writeItems(res)
+					ck.writer.after(res)
+				}
 
-                    ck.reader.before()
-                }
+				ck.reader.before()
+				for (let item = await ck.reader.readItem(); isCont && item != null; item = await ck.reader.readItem()) {
+					ck.reader.after()
 
-                // leftovers
-                if (items) {
-                    await writeResults(await procItems())
-                }
+					// round up items
+					items.push(item)
+					if (items.length === ck.itemCount) {
+						// process
+						const results = await procItems()
+						// write
+						await writeResults(results)
+						// reset
+						items = []
+					}
 
-                await ck.reader.close()
-                await ck.writer.close()
-                ck.after()
-            }
-            step.after()
-            se.status = Status.COMPLETED
-        }
-        j.after()
-        je.status = Status.COMPLETED
-    }
+					ck.reader.before()
+				}
 
-    _load(jfile: string): Job {
+				// leftovers
+				if (items) {
+					await writeResults(await procItems())
+				}
 
-        const path = require('path').resolve(jfile)
-        delete require.cache[path]
-        const obj = require(path)
-	
-        const j = _objToJob(obj)
-        j.path = path
+				await ck.reader.close()
+				await ck.writer.close()
+				ck.after()
+			}
+			step.after()
+			se.status = Status.COMPLETED
+		}
+		j.after()
+		je.status = Status.COMPLETED
+	}
 
-	this.repo.jobInsts.push(j)
-        return j
-    }
+	_load(jfile: string): Job {
 
-    start(jfile: string): string {
-        const j = this._load(jfile)
-        setImmediate(() => { this._startJobInst(j) })
-        return ''
-    }
+		const path = require('path').resolve(jfile)
+		delete require.cache[path]
+		const obj = require(path)
 
-    restart(execId: string): string {
-        return ''
-    }
+		const j = _objToJob(obj)
+		j.path = path
 
-    stop(execId: string): void {
+		this.repo.jobInsts.push(j)
+		return j
+	}
 
-    }
+	start(jfile: string): string {
+		const j = this._load(jfile)
+		setImmediate(() => { this._startJobInst(j) })
+		return ''
+	}
 
-    abandon(execId: string) { }
+	restart(execId: string): string {
+		return ''
+	}
 
-    jobInst(execId: string): Job {
-        const jc = this.repo.jobCtx.find((jc: JobContext) => {
-            return jc.execId() === execId
-        })
+	stop(execId: string): void {
 
-        if (!jc) { throw new Error('Could not find an alive job instance with execution ID: ' + execId) }
+	}
 
-        return this._jobInst(jc.instId())
-    }
+	abandon(execId: string) { }
 
-    _jobInst(jiid: string) {
-        return this.repo.jobInsts.find((ji: Job) => { return ji._id === jiid })
-    }
+	jobInst(execId: string): Job {
+		const jc = this.repo.jobCtxs.find((jc: JobCtx) => {
+			return jc.execId() === execId
+		})
 
-    jobExecs(inst: Job): JobExec[] {
-        const jcs = this.repo.jobCtx.filter((jc: JobContext) => {
-            return jc.instId() === inst._id
-        })
+		if (!jc) { throw new Error('Could not find an alive job instance with execution ID: ' + execId) }
 
-        return jcs.map((jc: JobContext) => {
-            return this.jobExec(jc.execId())
-        })
-    }
+		return this._jobInst(jc.instId())
+	}
 
-    jobExec(execId: string): JobExec {
-        return this.repo.jobExecs.find((je: JobExec) => {
-            return je.execId() === execId
-        })
-    }
+	_jobInst(jiid: string) {
+		return this.repo.jobInsts.find((ji: Job) => { return ji._id === jiid })
+	}
 
-    stepExecs(execId: string): StepExec[] {
-        return this.repo.stepExecs.filter((se: StepExec) => {
-            return se.jobExecId() === execId
-        })
-    }
+	jobExecs(inst: Job): JobExec[] {
+		const jcs = this.repo.jobCtxs.filter((jc: JobCtx) => {
+			return jc.instId() === inst._id
+		})
+
+		return jcs.map((jc: JobCtx) => {
+			return this.jobExec(jc.execId())
+		})
+	}
+
+	jobExec(execId: string): JobExec {
+		return this.repo.jobExecs.find((je: JobExec) => {
+			return je.execId() === execId
+		})
+	}
+
+	stepExecs(execId: string): StepExec[] {
+		return this.repo.stepExecs.filter((se: StepExec) => {
+			return se.jobExecId() === execId
+		})
+	}
 }
 
 function _objToJob(obj: any): Job {
-    const j = new Job()
-    _.defaultsDeep(obj, new Job())
-    if (obj.steps) {
-        for (const step of obj.steps) {
-            _.defaultsDeep(step, new Step())
-            if (step.chunk) { _.defaultsDeep(step.chunk, new Chunk()) }
-            if (step.batchlet) { _.defaultsDeep(step.batchlet, new Batchlet()) }
-        }
-    } else {
-        throw new TypeError(`${obj.name} has no .steps`)
-    }
-    return obj
+	const j = new Job()
+	_.defaultsDeep(obj, new Job())
+	if (obj.steps) {
+		for (const step of obj.steps) {
+			_.defaultsDeep(step, new Step())
+			if (step.chunk) { _.defaultsDeep(step.chunk, new Chunk()) }
+			if (step.batchlet) { _.defaultsDeep(step.batchlet, new Batchlet()) }
+		}
+	} else {
+		throw new TypeError(`${obj.name} has no .steps`)
+	}
+	return obj
 }

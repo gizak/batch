@@ -1,5 +1,6 @@
 import {Status} from '../runtime'
 import {Chunk} from './chunk'
+import {JobCtx} from './job'
 import {Batchlet} from './batchlet'
 import {enumerable} from 'core-decorators'
 import * as shortid from 'shortid'
@@ -8,6 +9,8 @@ export class Step {
 	public chunk: Chunk
 	public batchlet: Batchlet
 	public id: string
+	public stepCtx: StepCtx // stub
+	public jobCtx: JobCtx // stub
 
 	@enumerable
 	public before() {}
@@ -61,7 +64,7 @@ export class StepExec {
 	exitStatus(): string { return Status[this._status] }
 }
 
-export class StepContext {
+export class StepCtx {
 	private _transData: any
 	private _exec: StepExec
 	private _step: Step

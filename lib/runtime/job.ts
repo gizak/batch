@@ -8,6 +8,7 @@ export class Job {
 	public path: string
 	public steps: Step[]
 	public restartable: boolean
+	public ctx: JobCtx // stub
 
 	private _status: Status
 	private _instId: string
@@ -33,25 +34,31 @@ export class Job {
 export class JobExec {
 	private _id: string
 	private _jod: string
+	private _jobInst: Job
 	private _created: Date
 	private _updated: Date
 	private _started: Date
 	private _ended: Date
 	private _status: Status
+	private _ctx: JobCtx
 
-	constructor(jid: string) {
+	constructor(ji: Job) {
 		this._id = shortid.generate()
-		this._jod = jid
+		this._jobInst = ji
+		this._jod = ji.id
 		this._created = new Date()
 		this._updated = new Date()
 		this._started = new Date()
 		this._ended = null
 		this._status = null
+		this._ctx = new JobCtx(ji, this)
 	}
 
 	execId(): string { return this._id }
 
 	jobName(): string { return this._jod }
+
+	jobCtx(): JobCtx { return this._ctx }
 
 	get status(): Status { return this._status }
 	set status(s: Status) {
@@ -80,7 +87,7 @@ export class JobExec {
 	updatedTime(): Date { return this._updated }
 }
 
-export class JobContext {
+export class JobCtx {
 	private _transData: any
 	private _exitStatus: string
 	private _jobId: string
