@@ -1,33 +1,12 @@
-import { Step, StepCtx } from './step'
+import { Step } from './step'
+import { StepCtx } from './step-context'
 import { JobCtx } from './job-context'
+import { Job } from './job'
+import { JobRuntime } from './job-runtime'
 import * as shortid from 'shortid'
 import * as fs from 'fs'
 import * as vm from 'vm'
 import * as path from 'path'
-
-export class Job {
-	public id: string
-	public steps: Step[]
-	public restartable: boolean
-
-	public before() {}
-	public after() {}
-
-	// proxy stub
-	public RUNTIME: JobRuntime
-
-	constructor() {
-		this.id = ''
-		this.steps = []
-		this.restartable = false
-	}
-}
-
-export class JobRuntime {
-	public id: string
-	public jobContext: JobCtx
-	public stepContext: {[step: string]: StepCtx}
-}
 
 // synchronously load and compile Job.
 export function newVMScript(fpath: string): vm.Script {
