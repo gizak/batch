@@ -5,16 +5,16 @@ import { JobRuntime} from './job-runtime'
 export class JobCtx {
 	private _transData: any
 	private _exitStatus: string
-	private _runtime: JobRuntime
 	private _exec: JobExec
 
 	constructor() {
-		this._exec = je
-		this._runtime = runtime
 		this._exitStatus = null
+		this._transData = null
 	}
 
-	_bind() {}
+	_bind(je: JobExec) {
+		this._exec = je
+	}
 
 	execId(): string {return this._exec.execId() }
 	jobName(): string { return this._jobId }

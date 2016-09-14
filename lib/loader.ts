@@ -35,7 +35,7 @@ export function newJobInst(script: vm.Script): Job {
 		exports: _module.exports,
 		RUNTIME: {jobContext: null, stepContext: null}
 	}
-
+	
 	const je = new JobExec()
 	const jc = new JobCtx()
 	share.RUNTIME.jobContext = jc
@@ -58,6 +58,6 @@ export function newJobInst(script: vm.Script): Job {
 		}
 	}
 	const jobp = new Proxy(new Job(), handler)
-	jobp.RUNTIME._bind(script, jobp)
+
 	return jobp
 }
