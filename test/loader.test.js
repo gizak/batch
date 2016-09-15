@@ -16,7 +16,7 @@ describe('loader', ()=>{
 	it('can have job script access own prop and ext RUNTIME', () => {
 		rt = jip.RUNTIME
 		expect(rt).toBeDefined()
-		expect(jip.id).toBeDefined()
+		expect(jip.id).toBe('testjob')
 	})
 	it('can call hook',()=> {
 		jip.before()

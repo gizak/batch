@@ -61,6 +61,9 @@ export function newJobInst(script: JobScript): Job {
 			if (prop === 'RUNTIME') {
 				return share.RUNTIME
 			}
+			if (prop in job ) {
+				return Reflect.get(job, prop, receiver)
+			}
 			return Reflect.get(target, prop, receiver)
 		}
 	}
