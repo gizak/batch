@@ -25,5 +25,6 @@ describe('loader', ()=>{
 	it('can inject contexts',() => {
 		jctx = jip.RUNTIME.jobContext
 		expect(jctx).toBeDefined()
+		console.log(rt.stepContext)
 	})
 })

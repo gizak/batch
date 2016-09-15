@@ -38,7 +38,7 @@ export function newJobInst(script: JobScript): Job {
 		require: require,
 		module: _module,
 		exports: _module.exports,
-		RUNTIME: {jobContext: null, stepContext: null}
+		RUNTIME: {jobContext: null, stepContext: {}}
 	}
 
 	const id = shortid.generate()
@@ -49,11 +49,6 @@ export function newJobInst(script: JobScript): Job {
 	// import 
 	script.runInContext(context)
 	const job: any = _module.exports
-
-	// validate & setup
-	const jc = new JobCtx(job.id, script._id , id)
-	share.RUNTIME.jobContext = jc
-
 
 	// proxy
 	const handler = {
@@ -67,7 +62,15 @@ export function newJobInst(script: JobScript): Job {
 			return Reflect.get(target, prop, receiver)
 		}
 	}
-	const jobp = new Proxy(new Job(), handler)
+	const jobp = new Proxy<Job>(new Job(), handler)
 
+	// validate & setup
+	const jc = new JobCtx(job.id, script._id , id)
+	share.RUNTIME.jobContext = jc
+	for ( const s of jobp.steps ) {
+		share.RUNTIME.stepContext[s.id] = null
+	}
+
+	// now all hooked up
 	return jobp
 }

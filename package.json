@@ -49,6 +49,7 @@
     "shortid": "^2.2.6"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "notify": true
   }
 }

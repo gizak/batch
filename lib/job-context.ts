@@ -22,7 +22,7 @@ export class JobCtx {
 	}
 
 
-	get transientUserData(): any {return this._transData}
+	get transientUserData(): any { return this._transData }
 	set transientUserData(data: any) { this._transData = data }
 
 	get exitStatus(): string {
