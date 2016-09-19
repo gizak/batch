@@ -15,3 +15,7 @@ export class Step {
 		this.id = null
 	}
 }
+
+function newStepProxy(step: any): Step {
+	return null
+}

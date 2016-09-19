@@ -1,5 +1,5 @@
 /*global describe:true, it:true, console:true, expect:true*/
-/*eslint no-undef: "warning"*/
+/*eslint no-undef: "warn"*/
 
 const ctx = require('../build/job-context')
 
