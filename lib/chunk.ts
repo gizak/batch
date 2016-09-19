@@ -62,7 +62,7 @@ export function newItemReaderProxy(obj: any): ItemReader {
 
 export function newChunkProxy(obj: any): Chunk {
 	const chunk = new Chunk()
-	
+
 	const writer = newItemWriterProxy(obj.writer)
 	const reader = newItemReaderProxy(obj.reader)
 	const processor = newItemProcessorProxy(obj.processor)
@@ -73,7 +73,7 @@ export function newChunkProxy(obj: any): Chunk {
 
 	const handler = {
 		get(target, prop, receiver) {
-			if (prop in ["reader", "processor", "writer"]) {
+			if (prop in ['reader', 'processor', 'writer']) {
 				return Reflect.get(target, prop, receiver)
 			}
 			if (prop in obj) { return Reflect.get(obj, prop, receiver)}
