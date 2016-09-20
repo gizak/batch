@@ -3,7 +3,6 @@ import {StepCtx} from './step-context'
 import { newObjProxy } from './helpers'
 
 export class ItemReader {
-
 	open(chkpt?: any): void { }
 	close(): void { }
 	readItem(): any { return null }
@@ -11,6 +10,8 @@ export class ItemReader {
 	before() { }
 	after() { }
 	onError(err: any) { }
+
+	constructor() {}
 }
 
 export class ItemProcessor {
@@ -18,6 +19,8 @@ export class ItemProcessor {
 	processItem(item: any): any { return item }
 	after(item: any, result: any) { }
 	onError(item: any, err: any) { }
+
+	constructor() {}
 }
 
 export class ItemWriter {
@@ -28,6 +31,8 @@ export class ItemWriter {
 	before(items: any[]) { }
 	after(items: any[]) { }
 	onError(items: any[], err: any) { }
+
+	constructor() {}
 }
 
 export class Chunk {
@@ -73,13 +78,16 @@ export function newChunkProxy(obj: any): Chunk {
 
 	const handler = {
 		get(target, prop, receiver) {
-			if (prop in ['reader', 'processor', 'writer']) {
-				return Reflect.get(target, prop, receiver)
+			// use proxy priority for reader/processor/writer
+			if (['reader', 'processor', 'writer'].indexOf(prop) !== -1) {
+				return Reflect.get(chunk, prop, receiver)
 			}
+			// return prop in obj if any
 			if (prop in obj) { return Reflect.get(obj, prop, receiver)}
+			// return prop in proxy otherwise
 			return Reflect.get(target, prop, receiver)
 		}
 	}
 
-	return new Proxy(chunk, handler) 
+	return new Proxy(chunk, handler)
 }
