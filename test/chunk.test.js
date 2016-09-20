@@ -13,6 +13,9 @@ const chunk = {
 }
 
 describe('chunk',()=>{
+	it('can init with null',()=>{
+		ck.newChunkProxy(null)
+	})
 	const chunkp = ck.newChunkProxy(chunk)
 	it('can access prop on origin object',()=>{
 		expect(chunkp.itemCount).toBe(chunk.itemCount)

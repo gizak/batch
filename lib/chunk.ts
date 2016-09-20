@@ -66,6 +66,7 @@ export function newItemReaderProxy(obj: any): ItemReader {
 }
 
 export function newChunkProxy(obj: any): Chunk {
+	obj = obj || {}
 	const chunk = new Chunk()
 
 	const writer = newItemWriterProxy(obj.writer)
