@@ -1,5 +1,6 @@
 // Place your settings in this file to overwrite default and user settings.
 {
     "editor.fontFamily": "'SF Mono', 'Droid Sans Mono', 'Courier New', monospace, 'Droid Sans Fallback'",
-    "editor.renderIndentGuides": true
+    "editor.renderIndentGuides": true,
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "$(npm bin)/typings install",
     "prepublish": "$(npm bin)/tsc -p .",
-    "pretest": "$(npm bin)/tsc -p .",
+    "pretest": "node_modules/.bin/tsc -p .",
     "test": "jest",
     "test:full": "jest --coverage"
   },

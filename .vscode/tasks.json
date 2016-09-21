@@ -6,28 +6,6 @@
     "isShellCommand": true,
     "showOutput": "always",
     "suppressTaskName": true,
-    "windows": {
-        "commands": "npm",
-        "tasks": [
-            {
-                "taskName": "build",
-                "isBuildCommand": true,
-                "args": [
-                    "run",
-                    "win:build"
-                ]
-            },
-            {
-                "taskName": "test",
-                "args": [
-                    "run",
-                    "win:test",
-                    "-s"
-                ]
-
-            }
-        ]
-    },
     "tasks": [
         {
             "taskName": "install",
