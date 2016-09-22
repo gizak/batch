@@ -5,6 +5,7 @@
     "cookies": "registry:dt/cookies#0.5.1+20160316171810",
     "core-decorators": "registry:dt/core-decorators#0.10.0+20160316155526",
     "debug": "registry:dt/debug#0.0.0+20160317120654",
+    "joi": "registry:dt/joi#9.0.0+20160906140128",
     "koa": "registry:dt/koa#2.0.0+20160724024233",
     "koa-router": "registry:dt/koa-router#7.0.0+20160314083221",
     "lodash": "registry:dt/lodash#4.14.0+20160817155621",

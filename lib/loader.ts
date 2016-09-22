@@ -1,7 +1,7 @@
 import { Step } from './step'
 import { StepCtx } from './step-context'
 import { JobCtx } from './job-context'
-import { Job } from './job'
+import { Job, newJobProxy } from './job'
 import { JobExec } from './job-execution'
 import { JobRuntime } from './job-runtime'
 import * as shortid from 'shortid'
@@ -30,6 +30,7 @@ export function newVMScript(fpath: string): JobScript {
 }
 
 // init job context/exec, runtime uid
+// may throw error if job script is not validated
 export function newJobInst(script: JobScript): Job {
 	const _module = {
 		exports: {}
@@ -51,18 +52,7 @@ export function newJobInst(script: JobScript): Job {
 	const job: any = _module.exports
 
 	// proxy
-	const handler = {
-		get(target, prop, receiver) {
-			if (prop === 'RUNTIME') {
-				return share.RUNTIME
-			}
-			if (prop in job ) {
-				return Reflect.get(job, prop, receiver)
-			}
-			return Reflect.get(target, prop, receiver)
-		}
-	}
-	const jobp = new Proxy<Job>(new Job(), handler)
+	const jobp = newJobProxy(job, share.RUNTIME)
 
 	// validate & setup
 	const jc = new JobCtx(job.id, script._id , id)

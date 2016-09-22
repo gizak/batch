@@ -23,7 +23,7 @@ describe('step', ()=>{
 		stepp = step.newStepProxy(stepObj)	
 		expect(stepp.chunk).not.toBe(null)
 		expect(stepp.chunk.itemCount).toBe(1)
-
+		expect(stepp.chunk.processor.before).toBeDefined()
 		expect(stepp.chunk.reader.open).toBe(stepObj.chunk.reader.open)
 	})
 })
