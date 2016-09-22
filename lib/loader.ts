@@ -39,7 +39,7 @@ export function newJobInst(script: JobScript): Job {
 		require: require,
 		module: _module,
 		exports: _module.exports,
-		RUNTIME: {jobContext: null, stepContext: {}}
+		RUNTIME: {jobContext: {}, stepContext: {}}
 	}
 
 	const id = shortid.generate()

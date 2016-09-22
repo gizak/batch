@@ -25,18 +25,18 @@ export class Job {
 
 export function newJobProxy(obj: any, rt: any): Job {
 	const schema = Joi.object().keys({
-		id: Joi.string().required(),
+		id: Joi.string().min(1).required(),
 		restartable: Joi.boolean(),
 		steps: Joi.array().items(
 			Joi.object()
-			.keys({id: Joi.string().required()})
+			.keys({id: Joi.string().min(1).required()})
 			.xor('chunk', 'batchlet'))
 		.required()
 	})
 	const res = Joi.validate(obj, schema, {allowUnknown: true})
 	if (res.error) { throw res.error }
 
-	const steps = []
+	const steps: Step[] = []
 	if (obj.steps) {
 		for ( const s of obj.steps ) {
 			steps.push(newStepProxy(s))

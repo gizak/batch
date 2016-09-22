@@ -14,7 +14,7 @@ describe('step', ()=>{
 		expect(stepp.before).toBeDefined()
 	})
 	it('can access chunk', ()=>{
-		expect(stepp.chunk).toBe(null)
+		expect(stepp.chunk).toBe(undefined)
 		stepObj.chunk = {itemCount: 1}
 		stepObj.chunk.reader = {
 			open(){},

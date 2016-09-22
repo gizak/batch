@@ -5,7 +5,7 @@ import { Status } from './runtime'
 
 export class StepCtx {
 	private _transData: any
-	private _exitStatus: string
+	private _exitStatus: string | null
 	private _status: Status
 
 	public readonly stepExecutionId: string

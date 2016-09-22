@@ -10,9 +10,7 @@ export class Step {
 	public after() {}
 
 	constructor() {
-		this.chunk = null
-		this.batchlet = null
-		this.id = null
+		this.id = ''
 	}
 }
 
