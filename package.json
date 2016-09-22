@@ -4,8 +4,7 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "postinstall": "$(npm bin)/typings install",
-    "prepublish": "$(npm bin)/tsc -p .",
+    "prepublish": "node_modules/.bin/tsc -p .",
     "pretest": "node_modules/.bin/tsc -p .",
     "test": "jest",
     "test:full": "jest --coverage"
@@ -43,8 +42,7 @@
     "jest": "^15.1.1",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
-    "typescript": "^2.1.0-dev.20160822",
-    "typings": "^1.3.3"
+    "typescript": "^2.1.0-dev.20160822"
   },
   "dependencies": {
     "async": "^2.0.1",
