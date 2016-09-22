@@ -28,4 +28,12 @@ describe('loader', ()=>{
 		expect(jctx).toBeDefined()
 		//console.log(rt.stepContext)
 	})
+	it('can proxy calls', ()=>{
+		expect(jip.steps[0].chunk.before).toBeDefined()
+		expect(jip.steps[0].id).toBe('step1')
+	})
+	it('throws on bad script', ()=>{
+		const vms2 = loader.newVMScript('./test/job2.js')
+		expect(()=>loader.newJobInst(vms2)).toThrow()
+	})
 })
