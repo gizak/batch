@@ -4,6 +4,7 @@ import { JobCtx } from './job-context'
 import { JobRuntime } from './job-runtime'
 import { newStepProxy } from './step'
 import * as Joi from 'joi'
+import * as shortid from 'shortid'
 
 export class Job {
 	public id: string
@@ -15,6 +16,7 @@ export class Job {
 
 	// proxy stub
 	public RUNTIME: JobRuntime
+	public readonly _id: string
 
 	constructor() {
 		this.id = ''
@@ -42,11 +44,13 @@ export function newJobProxy(obj: any, rt: any): Job {
 			steps.push(newStepProxy(s))
 		}
 	}
+	const instId = shortid.generate()
 	const handler = {
 		get(target, prop, receiver) {
 			if (prop === 'RUNTIME') { return rt }
+			if (prop === '_id') { return instId }
 			if (prop === 'steps') { return steps }
-			if (prop in obj ) { return Reflect.get(obj, prop, receiver)	}
+			if (prop in obj) { return Reflect.get(obj, prop, receiver)	}
 			return Reflect.get(target, prop, receiver)
 		}
 	}

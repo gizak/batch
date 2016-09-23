@@ -12,26 +12,31 @@ import * as path from 'path'
 export class JobScript extends vm.Script {
 	readonly _id: string
 	_ctime: Date
-
-	constructor(fstr: string, opts: any) {
+	fpath: string
+	fstr: string
+	constructor(fpath: string, opts: any) {
+		fpath = path.resolve(fpath)
+		const fstr = fs.readFileSync(fpath, 'utf-8')
 		super(fstr, opts)
+
 		this._id = shortid.generate()
 		this._ctime = new Date()
+		this.fpath = fpath
+		this.fstr = fstr
+
 	}
 }
 
 // synchronously load and compile Job.
 export function newVMScript(fpath: string): JobScript {
 	const abspath = path.resolve(fpath)
-	const fstr = fs.readFileSync(abspath, 'utf-8')
 	const opts = {filename: abspath, lineOffset: 0, columnOffset: 0, displayErrors: true}
-
-	return new JobScript(fstr, opts)
+	return new JobScript(abspath, opts)
 }
 
 // init job context/exec, runtime uid
 // may throw error if job script is not validated
-export function newJobInst(script: JobScript): Job {
+export function _newJobInst(script: JobScript): Job {
 	const _module = {
 		exports: {}
 	}
@@ -43,7 +48,7 @@ export function newJobInst(script: JobScript): Job {
 	}
 
 	const id = shortid.generate()
-	const je = new JobExec()
+	// const je = new JobExec()
 
 	const context = vm.createContext(share)
 
@@ -62,5 +67,25 @@ export function newJobInst(script: JobScript): Job {
 	}
 
 	// now all hooked up
+	return jobp
+}
+
+export function newRawJob(script: JobScript): any {
+	const _module = {
+		exports: {}
+	}
+	const share = {
+		require: require,
+		module: _module,
+		exports: _module.exports,
+		RUNTIME: {jobContext: {}, stepContext: {}}
+	}
+	const context = vm.createContext(share)
+	script.runInContext(context)
+	return _module.exports
+}
+
+export function newJobInst(rawJob: any, runtimeObj: any): Job {
+	const jobp = newJobProxy(rawJob, runtimeObj)
 	return jobp
 }

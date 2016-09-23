@@ -9,10 +9,14 @@ describe('loader', ()=>{
 	let jctx = undefined
 	let vms = undefined
 	let jip = undefined
+	let job = undefined
 
-	it('can compile', ()=>{
+	it('loads script from disk', ()=>{
 		vms = loader.newVMScript('./test/job1.js')
-		jip = loader.newJobInst(vms)
+		expect(vms._id).toBeDefined()
+		job = loader.newRawJob(vms)
+		rt = {}
+		jip = loader.newJobInst(job, rt)
 	})
 	it('can have job script access own prop and ext RUNTIME', () => {
 		rt = jip.RUNTIME
@@ -24,6 +28,7 @@ describe('loader', ()=>{
 		jip.after()
 	})
 	it('can inject contexts',() => {
+		rt.jobContext = {}
 		jctx = jip.RUNTIME.jobContext
 		expect(jctx).toBeDefined()
 		//console.log(rt.stepContext)
@@ -34,6 +39,6 @@ describe('loader', ()=>{
 	})
 	it('throws on bad script', ()=>{
 		const vms2 = loader.newVMScript('./test/job2.js')
-		expect(()=>loader.newJobInst(vms2)).toThrow()
+		expect(()=>loader._newJobInst(vms2)).toThrow()
 	})
 })

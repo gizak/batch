@@ -35,5 +35,4 @@ export class JobCtx {
 	set exitStatus(s: string) {
 		this._exitStatus = s
 	}
-
 }
