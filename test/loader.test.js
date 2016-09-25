@@ -12,7 +12,7 @@ describe('loader', ()=>{
 	let job = undefined
 
 	it('loads script from disk', ()=>{
-		vms = loader.newVMScript('./test/job1.js')
+		vms = loader.newVMScriptFromFile('test/job1.js')
 		expect(vms._id).toBeDefined()
 		job = loader.newRawJob(vms)
 		rt = {}
@@ -38,7 +38,7 @@ describe('loader', ()=>{
 		expect(jip.steps[0].id).toBe('step1')
 	})
 	it('throws on bad script', ()=>{
-		const vms2 = loader.newVMScript('./test/job2.js')
+		const vms2 = loader.newVMScriptFromFile('test/job2.js')
 		expect(()=>loader._newJobInst(vms2)).toThrow()
 	})
 })
