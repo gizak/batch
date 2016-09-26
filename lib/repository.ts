@@ -57,11 +57,11 @@ export class Repo {
         // init persistent storage delayed
     }
 
-    initExecsRepo(dsn: string, opts: any) {
+    initExecsRepo(dsn: string, opts?: any) {
         this.execDocs = new PouchDB(dsn, opts)
     }
 
-    initScriptsRepo(dsn: string, opts: any) {
+    initScriptsRepo(dsn: string, opts?: any) {
         this.scriptDocs = new PouchDB(dsn, opts)
     }
 }
