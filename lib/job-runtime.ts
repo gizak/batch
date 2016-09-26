@@ -13,10 +13,6 @@ export class JobRuntime {
 
 	constructor() {
 		this._id = shortid.generate()
-	}
-
-	_bind(script: vm.Script, inst: Job) {
-		this._inst = inst
-		this._script = script
+		this.stepContext = {}
 	}
 }

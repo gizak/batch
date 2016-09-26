@@ -17,6 +17,7 @@ export class Job {
 	// proxy stub
 	public RUNTIME: JobRuntime
 	public readonly _id: string
+	public readonly _ref: string // refer to underlying vm script
 
 	constructor() {
 		this.id = ''
@@ -25,7 +26,7 @@ export class Job {
 	}
 }
 
-export function newJobProxy(obj: any, rt: any): Job {
+export function newJobProxy(obj: any, rt: any, ref?: string): Job {
 	const schema = Joi.object().keys({
 		id: Joi.string().min(1).required(),
 		restartable: Joi.boolean(),
@@ -50,6 +51,7 @@ export function newJobProxy(obj: any, rt: any): Job {
 			if (prop === 'RUNTIME') { return rt }
 			if (prop === '_id') { return instId }
 			if (prop === 'steps') { return steps }
+			if (prop === '_ref' ) { return ref }
 			if (prop in obj) { return Reflect.get(obj, prop, receiver)	}
 			return Reflect.get(target, prop, receiver)
 		}
