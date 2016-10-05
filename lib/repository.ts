@@ -36,6 +36,7 @@ interface ScriptDoc {
 export class Repo {
 	// in-memory
 	public jScripts: { [key: string]: JobScript }
+	public jRaw: { [key: string]: any }
 	public jInsts: { [key: string]: Job }
 	public jExecs: { [key: string]: JobExec }
 	public jCtxs: { [key: string]: JobCtx }

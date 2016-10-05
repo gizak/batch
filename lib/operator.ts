@@ -1,6 +1,7 @@
 import { Repo } from './repository'
 import { readFileSync } from 'fs'
 import { Job } from './job'
+import { JobExec } from './job-execution'
 import { JobScript, newVMScriptFromFile, newRawJob, newJobInst } from './loader'
 
 export class Operator {
@@ -16,12 +17,23 @@ export class Operator {
 		const js = newVMScriptFromFile(fpath)
 		this.db.jScripts[js._id] = js
 		return await this.db.addScript(js)
-		// const rjob = newRawJob(js)
-		// const jobp = newJobInst(rjob)
 	}
 
-	async _newJobInst(js: JobScript) {
-
+	// new job instance from js,
+	// store it in db 
+	// return new jobInst id
+	_newJobInst(js: JobScript): Job {
+		const rjob = newRawJob(js)
+		// yup, new runtime object
+		const rt  = { jobContext: {}, stepContext: {} }
+		const job = newJobInst(rjob, rt)
+		this.db.jInsts[job._id] = job
+		return job
 	}
-	async _newJobExec(ji: Job ) {}
+
+	_newJobExec(ji: Job ): JobExec {
+		const je = new JobExec(ji.id)
+		this.db.jExecs[je.id] = je
+		return je
+	}
 }

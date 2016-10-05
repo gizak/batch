@@ -14,8 +14,10 @@ describe('JobOperator',()=>{
     });
 
     it('obtained from runtime',()=>{
-	jo = batch.Runtime.jobOperator()
+	jo = batch.Runtime.operator
+	expect(batch.Runtime.jobOperator()).not.toBeDefined()	
 	expect(jo).toBeDefined()
+	expect(batch.Runtime.operator).toBe(jo)
     })
 
     it('loads job file', ()=>{
