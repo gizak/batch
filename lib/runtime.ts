@@ -12,4 +12,8 @@ export class Runtime {
 		}
 		return this._op
 	}
+
+	static init() {
+		
+	}
 }

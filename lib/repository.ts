@@ -76,6 +76,7 @@ export class Repo {
 
 	async addScript(js: JobScript) {
 		const record: ScriptDoc  = {_id: js._id, content: js.fstr, ctime: js._ctime.toISOString(), fpath:js.fpath}
+		this.jScripts[js._id] = js
 		return await this.scriptDocs.put(record)
 	}
 

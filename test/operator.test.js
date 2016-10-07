@@ -8,5 +8,9 @@ describe('operator',()=>{
 	let op = undefined
 	it('is obtainable', ()=>{
 		op = rt.operator
+		expect(op).toBe(rt.operator)
+	})
+	it('can add JobScript', ()=>{
+		
 	})
 })
