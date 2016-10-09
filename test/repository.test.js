@@ -16,6 +16,7 @@ describe('Repo', ()=>{
 		db.initScriptsRepo('batchdb/scripts')
 		expect(db.scriptDocs).toBeDefined()
 	})
+	/*
 	it('connects remote db server', ()=>{
 		// use pouchdb-server -m -n before tests
 		db.initScriptsRepo('http://127.0.0.1:5984/scripts')
@@ -26,4 +27,5 @@ describe('Repo', ()=>{
 			expect(e).not.toBeDefined()
 		})
 	})
+	*/
 })

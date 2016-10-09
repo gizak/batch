@@ -6,14 +6,17 @@ export enum Status {STARTING, STARTED, STOPPING, STOPPED, FAILED, COMPLETED, ABA
 export class Runtime {
 	private static db: Repo
 	private static _op: Operator | null
+	private static _opts: any
 	static get operator(): Operator {
-		if (!this._op) {
-			this._op = new Operator(this.db)
+		if (!Runtime._op) {
+			Runtime._op = new Operator(Runtime.db)
 		}
-		return this._op
+		return Runtime._op
 	}
 
-	static init() {
-		
+	static init(opts: {scripts: {dsn: string}, execs:  {dsn: string}}) {
+		Runtime._opts = opts
+		Runtime.db = new Repo()
+		Runtime.db.initScriptsRepo(opts.scripts.dsn, {})
 	}
 }

@@ -11,11 +11,13 @@ export class JobCtx {
 	public readonly executionId: string
 	public readonly instanceId: string
 	public readonly jobName: string
+	public readonly _id: string
 
 	constructor(jname: string, instId: string, execId: string) {
 		this.jobName = jname
 		this.instanceId = instId
 		this.executionId = execId
+		this._id = this.executionId
 		this._exitStatus = null
 		this._transData = null
 		this._status = Status.STARTING

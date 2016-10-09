@@ -49,7 +49,7 @@ export class Repo {
 	private execDocsDSN: string
 	private scriptDocsDSN: string
 
-	constructor(dsn: string, opts: any) {
+	constructor() {
 		this.jScripts = {}
 		this.jInsts = {}
 		this.jExecs = {}
@@ -61,7 +61,7 @@ export class Repo {
 	}
 
 	initExecsRepo(dsn: string, opts?: any) {
-		this.execDocs = new PouchDB(dsn, opts)
+		this.execDocs = new PouchDB<ExecDoc>(dsn, opts)
 		this.execDocsDSN = dsn
 	}
 	async deinitExecsRepo() {
@@ -69,7 +69,7 @@ export class Repo {
 	}
 
 	initScriptsRepo(dsn: string, opts?: any) {
-		this.scriptDocs = new PouchDB(dsn, opts)
+		this.scriptDocs = new PouchDB<ScriptDoc>(dsn, opts)
 		this.scriptDocsDSN = dsn
 	}
 	async deinitScriptsRepo() {}
@@ -86,5 +86,9 @@ export class Repo {
 		doc.content = js.fstr
 		doc.fpath = js.fpath
 		return await this.scriptDocs.put(doc)
+	}
+
+	async close() {
+		//if(this.execDocs) { await this.execDocs }
 	}
 }
