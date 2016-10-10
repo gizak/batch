@@ -41,7 +41,7 @@ export class Operator {
 		return job
 	}
 
-	_newJobExec(ji: Job ): JobExec {
+	async _newJobExec(ji: Job ): Promise<JobExec> {
 		const je = new JobExec(ji.id)
 		this.db.jExecs[je.id] = je
 		return je
@@ -56,7 +56,7 @@ export class Operator {
 	async _initJob(fpath: string) {
 		const js = await this._loadJobScriptFromFile(fpath)
 		const ji = this._newJobInst(js)
-		const je = this._newJobExec(ji)
+		const je = await this._newJobExec(ji)
 		const jc = this._newJobCtx(ji,je)
 	}
 }
