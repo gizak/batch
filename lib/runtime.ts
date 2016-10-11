@@ -1,7 +1,6 @@
 import { Operator } from './operator'
 import { Repo } from './repository'
-
-export enum Status {STARTING, STARTED, STOPPING, STOPPED, FAILED, COMPLETED, ABANDONED}
+import { Status } from './status'
 
 export class Runtime {
 	private static db: Repo

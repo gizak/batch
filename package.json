@@ -1,6 +1,6 @@
 {
   "name": "batch",
-  "version": "1.0.1",
+  "version": "0.0.2",
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
@@ -31,18 +31,18 @@
     "@types/core-decorators": "^0.10.30",
     "@types/joi": "^9.0.32",
     "@types/koa": "^2.0.33",
-    "@types/lodash": "^4.14.36",
+    "@types/lodash": "^4.14.37",
     "@types/mongodb": "^2.1.33",
-    "@types/node": "^6.0.40",
+    "@types/node": "^6.0.45",
     "@types/pouchdb": "^5.4.28",
     "@types/shortid": "0.0.28",
     "cross-env": "^2.0.0",
-    "eslint": "^3.0.1",
+    "eslint": "^3.7.1",
     "eslint-plugin-react": "^5.2.2",
     "jest": "^15.1.1",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
-    "typescript": "^2.1.0-dev.20160822"
+    "typescript": "^2.1.0"
   },
   "dependencies": {
     "async": "^2.0.1",
@@ -51,12 +51,12 @@
     "cross-env": "^2.0.1",
     "debug": "^2.2.0",
     "eslint": "^3.5.0",
-    "joi": "^9.0.4",
+    "joi": "^9.1.0",
     "koa": "^1.2.4",
     "koa-router": "^5.4.0",
-    "lodash": "^4.16.1",
+    "lodash": "^4.16.4",
     "mongodb": "^2.2.10",
-    "pouchdb": "^6.0.5",
+    "pouchdb": "^6.0.6",
     "request": "^2.75.0",
     "shortid": "^2.2.6",
     "typescript": "^2.1.0-dev.20160922"

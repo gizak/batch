@@ -44,6 +44,7 @@ export class Operator {
 	async _newJobExec(ji: Job ): Promise<JobExec> {
 		const je = new JobExec(ji.id)
 		this.db.jExecs[je.id] = je
+		await this.db.addExec(je)
 		return je
 	}
 

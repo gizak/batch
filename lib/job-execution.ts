@@ -1,17 +1,14 @@
 import * as shortid from 'shortid'
+import { Stateful } from './status'
 
-export class JobExec {
-	public createTime: Date
-	public startTime: Date
-	public endTime: Date
-	public updatedTime: Date
+export class JobExec extends Stateful {
 
 	public readonly jobName: string
 	public readonly id: string
 	private readonly _id: string
 
 	constructor(jname: string) {
-		this.updatedTime = this.createTime = new Date()
+		super()
 		this.id = this._id = shortid.generate()
 		this.jobName = jname
 	}

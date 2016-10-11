@@ -1,7 +1,7 @@
 import { Job } from './job'
 import { JobExec } from './job-execution'
 import { JobRuntime} from './job-runtime'
-import { Status } from './runtime'
+import { Status } from './status'
 
 export class JobCtx {
 	private _transData: any

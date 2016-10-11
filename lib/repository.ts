@@ -4,7 +4,7 @@ import { JobExec } from './job-execution'
 import { JobCtx } from './job-context'
 import { StepExec } from './step-execution'
 import { StepCtx } from './step-context'
-import { Status } from './runtime'
+import { Status } from './status'
 import { JobScript } from './loader'
 
 interface ExecDoc {
@@ -12,16 +12,17 @@ interface ExecDoc {
 	_rev?: string
 	ctime: string
 	btime: string
+	stime: string
 	instId: string
 	jobName: string
 	status: Status
-	steps: { [key: string]: StepExecDoc }[]
+	steps: { [key: string]: StepExecDoc | null }[]
 }
 
 interface StepExecDoc {
 	_id: string
 	perstData: any
-	chkPoint: any
+	chkPtData: any
 	status: Status
 	exitStatus: string
 }
@@ -75,20 +76,20 @@ export class Repo {
 		this.scriptDocs = new PouchDB<ScriptDoc>(dsn, opts)
 		this.scriptDocsDSN = dsn
 	}
-	async deinitScriptsRepo() {}
+	async deinitScriptsRepo() { }
 
 	async addScript(js: JobScript) {
-		const record: ScriptDoc  = {_id: js._id, content: js.fstr, ctime: js._ctime.toISOString(), fpath:js.fpath}
+		const record: ScriptDoc = { _id: js._id, content: js.fstr, ctime: js._ctime.toISOString(), fpath: js.fpath }
 		this.jScripts[js._id] = js
-		if (this.scriptDocs == null ) {
+		if (this.scriptDocs == null) {
 			return
 		}
 		return await this.scriptDocs.put(record)
 	}
 
 	async updateScript(js: JobScript) {
-		if ( this.scriptDocs === null ) {
-			return 
+		if (this.scriptDocs === null) {
+			return
 		}
 		const doc = await this.scriptDocs.get(js._id)
 		doc.ctime = new Date().toISOString()
@@ -97,20 +98,47 @@ export class Repo {
 		return await this.scriptDocs.put(doc)
 	}
 
-	async addExec(je: JobExec) {
-		if (this.jExecs === null ) {
-			return 
+	async addExec(je: JobExec, instId?: string, steps?: string[]) {
+		if (this.execDocs === null) {
+			return
 		}
-
+		const obj: ExecDoc = {
+			_id: je.id,
+			ctime: je.updatedTime.toISOString(),
+			jobName: je.jobName,
+			btime: je.createTime.toISOString(),
+			stime: je.startTime === null ? '' : je.startTime.toISOString(),
+			instId: '',
+			steps: [],
+			status: je.batchStatus
+		}
+		if (instId) {
+			obj.instId = instId
+		}
+		if (steps) {
+			for (const s of steps) {
+				obj.steps.push({[s]: null})
+			}
+		}
+		this.execDocs.put(obj)
 	}
 
+	async addStepExec(se: StepExec) {}
+
 	async updateExec(je: JobExec) {
-		if ( this.jExecs === null ) {
-			return 
+		if (this.jExecs === null) {
+			return
 		}
+	}
+
+	async getStepPerstData(execId: string, stepId: string): Promise<any> {
+		if ( this.execDocs === null ) {
+			return null
+		}
+		const doc = await this.execDocs.get(execId)
+		return doc.steps[stepId]
 	}
 
 	async close() {
-		//if(this.execDocs) { await this.execDocs }
 	}
 }

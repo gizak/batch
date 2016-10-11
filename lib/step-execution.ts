@@ -1,31 +1,25 @@
-import { Status } from './runtime'
+import { Stateful } from './status'
+import { Repo } from './repository'
+import * as shortid from 'shortid'
 
-export class StepExec {
+export class StepExec extends Stateful {
 	public readonly stepExecId: string
 	public readonly stepName: string
-	public startTime: Date
-	public endTime: Date
 
-	public batchStatus: Status
-	private _exitStatus: string
+	public readonly _id: string
 
-	constructor() {
-		this.batchStatus = Status.STARTING
-		this.startTime = new Date()
+	private readonly _execId: string
+	private readonly _db: Repo
+
+	constructor(repo: Repo, execId: string, stepId: string) {
+		super()
+		this._id = shortid.generate()
+		this._execId = execId
+		this.stepExecId = stepId
+		this._db = repo
 	}
 
-	get exitStatus(): string {
-		if ( this._exitStatus === null ) {
-			return Status[this.batchStatus]
-		}
-		return this._exitStatus
-	}
-
-	set exitStatus(s: string) {
-		this._exitStatus = s
-	}
-
-	get persistentUserData(): any {
-		return null
+	async getPersistentUserData(): Promise<any> {
+		return this._db.getStepPerstData(this._execId, this.stepExecId)
 	}
 }
