@@ -3,7 +3,8 @@
 /*eslint-dsiable no-console */
 
 const repo = require('../build/repository')
-const shortid = require('shortid')
+const exec = require('../build/job-execution')
+const stat = require('../build/status')
 
 describe('Repo', ()=>{
 	let db = null
@@ -15,6 +16,14 @@ describe('Repo', ()=>{
 	it('inits in-disk storage', ()=>{
 		db.initScriptsRepo('batchdb/scripts')
 		expect(db.scriptDocs).toBeDefined()
+	})
+
+	it('converts JobExec to ExecDoc', ()=>{
+		const je = new exec.JobExec('jname')
+		const doc = db._newExecDoc(je,'inst-id')
+		expect(doc.steps).toBeNull()
+		expect(doc.instId).toBe('inst-id')
+		expect(doc.status).toBe(stat.Status['STARTING'])
 	})
 	/*
 	it('connects remote db server', ()=>{

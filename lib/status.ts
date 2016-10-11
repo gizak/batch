@@ -6,12 +6,14 @@ export class Stateful {
 	public endTime: Date | null
 	public updatedTime: Date
 
-	public _batchStatus: Status
-	protected _exitStatus: string
+	private _batchStatus: Status
+	private _exitStatus: string
 
 	constructor() {
 		this._batchStatus = Status.STARTING
-		this.updatedTime = this.startTime = new Date()
+		this.startTime = null
+		this.endTime = null
+		this.updatedTime = this.createTime = new Date()
 	}
 
 	get batchStatus(): Status {

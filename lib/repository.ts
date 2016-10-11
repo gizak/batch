@@ -16,11 +16,12 @@ interface ExecDoc {
 	instId: string
 	jobName: string
 	status: Status
-	steps: { [key: string]: StepExecDoc | null }[]
+	steps: StepExecDoc[] | null
 }
 
 interface StepExecDoc {
 	_id: string
+	id: string
 	perstData: any
 	chkPtData: any
 	status: Status
@@ -98,10 +99,7 @@ export class Repo {
 		return await this.scriptDocs.put(doc)
 	}
 
-	async addExec(je: JobExec, instId?: string, steps?: string[]) {
-		if (this.execDocs === null) {
-			return
-		}
+	private _newExecDoc(je: JobExec, instId?: string): ExecDoc {
 		const obj: ExecDoc = {
 			_id: je.id,
 			ctime: je.updatedTime.toISOString(),
@@ -109,18 +107,20 @@ export class Repo {
 			btime: je.createTime.toISOString(),
 			stime: je.startTime === null ? '' : je.startTime.toISOString(),
 			instId: '',
-			steps: [],
+			steps: null,
 			status: je.batchStatus
 		}
 		if (instId) {
 			obj.instId = instId
 		}
-		if (steps) {
-			for (const s of steps) {
-				obj.steps.push({[s]: null})
-			}
+		return obj
+	}
+
+	async addExec(je: JobExec, instId?: string, steps?: string[]) {
+		if (this.execDocs === null) {
+			return
 		}
-		this.execDocs.put(obj)
+		this.execDocs.put(this._newExecDoc(je, instId))
 	}
 
 	async addStepExec(se: StepExec) {}
@@ -131,11 +131,14 @@ export class Repo {
 		}
 	}
 
-	async getStepPerstData(execId: string, stepId: string): Promise<any> {
+	async getStepPerstDataByExec(execId: string, stepId: string): Promise<any> {
 		if ( this.execDocs === null ) {
 			return null
 		}
 		const doc = await this.execDocs.get(execId)
+		if (doc.steps == null ) {
+			return null
+		}
 		return doc.steps[stepId]
 	}
 

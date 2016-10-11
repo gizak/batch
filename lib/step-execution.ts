@@ -20,6 +20,6 @@ export class StepExec extends Stateful {
 	}
 
 	async getPersistentUserData(): Promise<any> {
-		return this._db.getStepPerstData(this._execId, this.stepExecId)
+		return this._db.getStepPerstDataByExec(this._execId, this.stepExecId)
 	}
 }
