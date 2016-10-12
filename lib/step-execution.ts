@@ -5,21 +5,19 @@ import * as shortid from 'shortid'
 export class StepExec extends Stateful {
 	public readonly stepExecId: string
 	public readonly stepName: string
+	public readonly execId: string
 
-	public readonly _id: string
-
-	private readonly _execId: string
+	private readonly _id: string
 	private readonly _db: Repo
 
-	constructor(repo: Repo, execId: string, stepId: string) {
+	constructor(repo: Repo, execId: string) {
 		super()
-		this._id = shortid.generate()
-		this._execId = execId
-		this.stepExecId = stepId
+		this.execId = execId
+		this.stepExecId = this._id = shortid.generate()
 		this._db = repo
 	}
 
 	async getPersistentUserData(): Promise<any> {
-		return this._db.getStepPerstDataByExec(this._execId, this.stepExecId)
+		return await this._db.getStepPerstData(this._id)
 	}
 }

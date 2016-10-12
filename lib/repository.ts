@@ -16,12 +16,14 @@ interface ExecDoc {
 	instId: string
 	jobName: string
 	status: Status
-	steps: StepExecDoc[] | null
+	steps: string[] | null
 }
 
 interface StepExecDoc {
 	_id: string
-	id: string
+	name: string
+	execId: string
+	_rev?: string
 	perstData: any
 	chkPtData: any
 	status: Status
@@ -30,6 +32,7 @@ interface StepExecDoc {
 
 interface ScriptDoc {
 	_id: string
+	_rev?: string
 	content: string
 	ctime: string
 	fpath: string
@@ -47,8 +50,10 @@ export class Repo {
 
 	// in-disk / remote
 	public execDocs: null | PouchDB.Database<ExecDoc>
+	public stepDocs: null | PouchDB.Database<StepExecDoc>
 	public scriptDocs: null | PouchDB.Database<ScriptDoc>
 	private execDocsDSN: string
+	private stepDocsDSN: string
 	private scriptDocsDSN: string
 
 	constructor() {
@@ -63,21 +68,23 @@ export class Repo {
 		// set it to nulls for no op
 		this.execDocs = null
 		this.scriptDocs = null
+		this.scriptDocs = null
 	}
 
 	initExecsRepo(dsn: string, opts?: any) {
 		this.execDocs = new PouchDB<ExecDoc>(dsn, opts)
 		this.execDocsDSN = dsn
 	}
-	async deinitExecsRepo() {
-		// return await this.execDocs
-	}
 
 	initScriptsRepo(dsn: string, opts?: any) {
 		this.scriptDocs = new PouchDB<ScriptDoc>(dsn, opts)
 		this.scriptDocsDSN = dsn
 	}
-	async deinitScriptsRepo() { }
+
+	initStepsRepo(dsn: string, opts?: any) {
+		this.stepDocs = new PouchDB<StepExecDoc>(dsn, opts)
+		this.stepDocsDSN = dsn
+	}
 
 	async addScript(js: JobScript) {
 		const record: ScriptDoc = { _id: js._id, content: js.fstr, ctime: js._ctime.toISOString(), fpath: js.fpath }
@@ -123,7 +130,34 @@ export class Repo {
 		this.execDocs.put(this._newExecDoc(je, instId))
 	}
 
-	async addStepExec(se: StepExec) {}
+	async addStepExec(se: StepExec) {
+		const doc: StepExecDoc = {
+			_id: se.stepExecId,
+			execId: se.execId,
+			name: se.stepName,
+			status: se.batchStatus,
+			exitStatus: se.exitStatus,
+			chkPtData: null,
+			perstData: null
+		}
+	}
+
+	async getChkPtData(sid: string): Promise<any> {
+		if (this.stepDocs === null ) {
+			return
+		}
+		const doc = await this.stepDocs.get(sid)
+		return doc.chkPtData
+	}
+
+	async setChkPtData(sid: string, data: any) {
+		if (this.stepDocs === null ) {
+			return
+		}
+		const doc = await this.stepDocs.get(sid)
+		doc.chkPtData = data
+		return await this.stepDocs.put(doc)
+	}
 
 	async updateExec(je: JobExec) {
 		if (this.jExecs === null) {
@@ -131,7 +165,16 @@ export class Repo {
 		}
 	}
 
-	async getStepPerstDataByExec(execId: string, stepId: string): Promise<any> {
+	async setStepPerstData(sid: string, data: any) {
+		if (this.stepDocs === null ) {
+			return
+		}
+		const doc = await this.stepDocs.get(sid)
+		doc.perstData = data
+		return await this.stepDocs.put(doc)
+	}
+
+	async getStepPerstDataByExec(execId: string, stepIdx: number): Promise<any> {
 		if ( this.execDocs === null ) {
 			return null
 		}
@@ -139,7 +182,16 @@ export class Repo {
 		if (doc.steps == null ) {
 			return null
 		}
-		return doc.steps[stepId]
+		const sid = doc.steps[stepIdx]
+		return await this.getStepPerstData(sid)
+	}
+
+	// sid: _id
+	async getStepPerstData(sid: string): Promise<any> {
+		if ( this.stepDocs === null ) {
+			return null
+		}
+		return await this.stepDocs.get(sid)
 	}
 
 	async close() {

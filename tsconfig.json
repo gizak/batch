@@ -5,7 +5,7 @@
         "removeComments": true,
         "pretty": false,
         "preserveConstEnums": true,
-        "sourceMap": false,
+        //"sourceMap": true,
         "outDir": "./build",
         "target": "es2015",
         "experimentalDecorators": true,
@@ -15,7 +15,10 @@
     "exclude": [
         "node_modules",
         "lib_deprecated",
-        "lib_deprecated2",
-        "test"
+        "lib_deprecated2",        
+        "test",
+        "coverage",
+        "bin",
+        "batchdb"
     ]
 }

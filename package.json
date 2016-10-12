@@ -4,8 +4,8 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "prepublish": "node_modules/.bin/tsc -p .",
-    "pretest": "node_modules/.bin/tsc -p .",
+    "prepublish": "node_modules/.bin/tsc",
+    "pretest": "node_modules/.bin/tsc",
     "test": "jest",
     "test:full": "jest --coverage"
   },
@@ -57,12 +57,15 @@
     "lodash": "^4.16.4",
     "mongodb": "^2.2.10",
     "pouchdb": "^6.0.6",
+    "pouchdb-find": "^0.10.3",
     "request": "^2.75.0",
     "shortid": "^2.2.6",
     "typescript": "^2.1.0-dev.20160922"
   },
   "jest": {
     "testEnvironment": "node",
-    "notify": true
+    "notify": true,
+    "bail": true,
+    "verbose": true
   }
 }
