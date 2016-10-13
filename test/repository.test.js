@@ -25,6 +25,17 @@ describe('Repo', ()=>{
 		expect(doc.instId).toBe('inst-id')
 		expect(doc.status).toBe(stat.Status['STARTING'])
 	})
+
+	it('adds ExecDoc data', () => {
+		db.initExecsRepo('batchdb/execs')
+		const doc = new exec.JobExec('job')
+		const resp = db.addExec(doc)
+		resp
+			.then( r => { expect(r).toBeDefined() })
+			.catch( err => { console.log(err) })
+	})
+
+	it('adds ExecDoc data', () => {})
 	/*
 	it('connects remote db server', ()=>{
 		// use pouchdb-server -m -n before tests

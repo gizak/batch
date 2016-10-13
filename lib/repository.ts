@@ -127,7 +127,7 @@ export class Repo {
 		if (this.execDocs === null) {
 			return
 		}
-		this.execDocs.put(this._newExecDoc(je, instId))
+		return this.execDocs.put(this._newExecDoc(je, instId))
 	}
 
 	async addStepExec(se: StepExec) {

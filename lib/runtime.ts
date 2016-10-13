@@ -13,7 +13,7 @@ export class Runtime {
 		return Runtime._op
 	}
 
-	static init(opts: {scripts: {dsn: string}, execs:  {dsn: string}}) {
+	static init(opts: {scripts: {dsn: string}, execs:  {dsn: string}, steps: {dsn: string}}) {
 		Runtime._opts = opts
 		Runtime.db = new Repo()
 		Runtime.db.initScriptsRepo(opts.scripts.dsn, {})

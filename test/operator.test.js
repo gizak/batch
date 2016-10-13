@@ -13,12 +13,13 @@ describe('operator',()=>{
 		expect(op).toBe(rt.Runtime.operator)
 	})
 	it('can add JobScript', ()=>{
-		op._loadJobScriptFromFile('test/job1.js').then( js => {
+		op._loadJobScriptFromFile('test/job1.js').then( js => {		
 			expect(js).toBeDefined()
+
 			const ji = op._newJobIns(js)
 			expect(ji).toBeDefined()
 			expect(rt.Runtime.db.jInsts.keys().length).toBe(1)
-			
+		
 			const je = op._newJobExec(ji)
 			expect(je).toBeDefined()
 			expect(rt.Runtime.db.jExecs.keys().length).toBe(1)
@@ -27,7 +28,7 @@ describe('operator',()=>{
 			expect(jc).toBeDefined()
 			expect(rt.Runtime.db.jCtxs.keys().length).toBe(1)
 
-		}).catch(err=>{
+		}).catch(err => {
 			console.log(err)
 		})
 	})
