@@ -7,7 +7,7 @@ import { StepCtx } from './step-context'
 import { Status } from './status'
 import { JobScript } from './loader'
 
-interface ExecDoc {
+export interface ExecDoc {
 	_id: string
 	_rev?: string
 	ctime: string
@@ -19,7 +19,7 @@ interface ExecDoc {
 	steps: string[] | null
 }
 
-interface StepExecDoc {
+export interface StepExecDoc {
 	_id: string
 	name: string
 	execId: string
@@ -30,7 +30,7 @@ interface StepExecDoc {
 	exitStatus: string
 }
 
-interface ScriptDoc {
+export interface ScriptDoc {
 	_id: string
 	_rev?: string
 	content: string

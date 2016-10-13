@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "declaration": true,
+        "declaration": false,
         "noImplicitAny": false,
         "removeComments": true,
         "pretty": false,
-        "sourceMap": false,
+        "sourceMap": true,
         "preserveConstEnums": true,
         "outDir": "build",
         "rootDir": "lib",

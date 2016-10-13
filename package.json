@@ -4,8 +4,8 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "prepublish": "node_modules/.bin/tsc",
-    "test": "jest",
+    "prepublish": "node_modules/.bin/tsc -p .",
+    "test": "jest --no-cache",
     "test:full": "jest --coverage"
   },
   "repository": {
@@ -66,6 +66,9 @@
       "tsx",
       "js"
     ],
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globals": {
+      "__TS_CONFIG__": {}
+    }
   }
 }
