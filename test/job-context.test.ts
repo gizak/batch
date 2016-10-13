@@ -1,12 +1,11 @@
-/*global describe:true, it:true, console:true, expect:true*/
-/*eslint no-undef: "warn"*/
+declare var jest, describe, it, expect
 
-const ctx = require('../build/job-context')
+import { JobCtx } from '../lib/job-context'
 
-describe('JobContext', ()=>{
-	it('can new instance',() => {
-		const jctx = new ctx.JobCtx('jname','instId','execId')
-		
+describe('JobContext', () => {
+	it('can new instance', () => {
+		const jctx = new JobCtx('jname', 'instId', 'execId')
+
 		expect(jctx).toBeDefined()
 		// readonly Id
 		expect(jctx.executionId).toBe('execId')
