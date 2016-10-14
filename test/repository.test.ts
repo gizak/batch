@@ -6,6 +6,7 @@ import { Status } from '../build/status'
 
 describe('Repo', () => {
 	let db = null
+
 	it('inits in-mem storage', () => {
 		db = new Repo()
 		expect(db.jScripts).toBeDefined()
@@ -13,7 +14,9 @@ describe('Repo', () => {
 
 	it('inits in-disk storage', () => {
 		db.initScriptsRepo('batchdb/scripts')
+		db.initExecsRepo('batchdb/execs')
 		expect(db.scriptDocs).toBeDefined()
+		expect(db.execDocs).toBeDefined()
 	})
 
 	it('converts JobExec to ExecDoc', () => {
@@ -24,16 +27,13 @@ describe('Repo', () => {
 		expect(doc.status).toBe(Status['STARTING'])
 	})
 
-	it('adds ExecDoc data', () => {
-		db.initExecsRepo('batchdb/execs')
+	it('adds ExecDoc data', async () => {
 		const doc = new JobExec('job')
-		const resp = db.addExec(doc)
-		resp
-			.then(r => { expect(r).toBeDefined() })
-			.catch(err => { console.log(err) })
+		const resp = await db.addExec(doc)
+		expect(resp).toBeDefined()
 	})
 
-	it('adds ExecDoc data', () => { })
+	it('adds StepExecDoc data', () => { })
 	/*
 	it('connects remote db server', ()=>{
 		// use pouchdb-server -m -n before tests

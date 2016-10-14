@@ -13,9 +13,21 @@ export class Runtime {
 		return Runtime._op
 	}
 
-	static init(opts: {scripts: {dsn: string}, execs:  {dsn: string}, steps: {dsn: string}}) {
+	static init(opts: { scripts?: { dsn: string }, execs?: { dsn: string }, steps?: { dsn: string } }) {
 		Runtime._opts = opts
 		Runtime.db = new Repo()
-		Runtime.db.initScriptsRepo(opts.scripts.dsn, {})
+		if (opts.scripts) {
+			Runtime.db.initScriptsRepo(opts.scripts.dsn, {})
+		}
+		if (opts.execs) {
+			Runtime.db.initExecsRepo(opts.execs.dsn, {})
+		}
+		if (opts.steps) {
+
+		}
+	}
+
+	static _dumpDB() {
+		Runtime.db._dump()
 	}
 }

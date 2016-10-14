@@ -4,6 +4,7 @@ import { Job } from './job'
 import { JobCtx } from './job-context'
 import { JobExec } from './job-execution'
 import { JobScript, newVMScriptFromFile, newRawJob, newJobInst } from './loader'
+import { resolve } from 'path'
 
 export class Operator {
 	private readonly db: Repo
@@ -15,6 +16,7 @@ export class Operator {
 	// load job script into db
 	// return id
 	async _loadJobScriptFromFile(fpath: string): Promise<JobScript> {
+		fpath = resolve(fpath)
 		// load from cache
 		for (const _id in this.db.jScripts) {
 			if (this.db.jScripts[_id].fpath === fpath ) {
@@ -25,7 +27,7 @@ export class Operator {
 		const js = newVMScriptFromFile(fpath)
 		this.db.jScripts[js._id] = js
 		await this.db.addScript(js)
-		return Promise.resolve(js)
+		return js
 	}
 
 	// new job instance from js,
@@ -33,7 +35,7 @@ export class Operator {
 	// return new jobInst id
 	_newJobInst(js: JobScript): Job {
 		const rjob = newRawJob(js)
-		//this.db.jRaw[rjob._]
+		// this.db.jRaw[rjob._]
 		// yup, new runtime object
 		const rt  = { jobContext: {}, stepContext: {} }
 		const job = newJobInst(rjob, rt)
@@ -50,8 +52,8 @@ export class Operator {
 
 	_newJobCtx(ji, je): JobCtx {
 		const jc =  new JobCtx(ji.id, ji._id, je.id)
-		this.db.jCtxs[jc.executionId]
-		return jc 
+		this.db.jCtxs[jc.executionId] = jc
+		return jc
 	}
 
 	async _initJob(fpath: string) {

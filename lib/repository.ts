@@ -124,10 +124,12 @@ export class Repo {
 	}
 
 	async addExec(je: JobExec, instId?: string, steps?: string[]) {
+		const doc = this._newExecDoc(je, instId)
+		this.jExecs[je.id] = je
 		if (this.execDocs === null) {
 			return
 		}
-		return this.execDocs.put(this._newExecDoc(je, instId))
+		return await this.execDocs.put(doc)
 	}
 
 	async addStepExec(se: StepExec) {
@@ -195,5 +197,18 @@ export class Repo {
 	}
 
 	async close() {
+	}
+
+	async _dump() {
+		if (this.scriptDocs) {
+			console.log('SCRIPTS:')
+			const info = await this.scriptDocs.info()
+			console.log(info)
+		}
+		if (this.execDocs) {
+			console.log('EXECS:')
+			const info = await this.execDocs.info()
+			console.log(info)
+		}
 	}
 }

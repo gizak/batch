@@ -4,10 +4,11 @@
   "description": "Batch processing",
   "main": "index.js",
   "scripts": {
-    "prepublish": "node_modules/.bin/tsc -p .",
-    "pretest": "node_modules/.bin/tsc -p . --noEmitOnError",
-    "test": "jest",
-    "test:full": "jest --coverage"
+    "prepublish": "tsc",
+    "pretest": "tsc",
+    "test": "jest --runInBand",
+    "test:full": "jest --coverage --verbose",
+    "clean": "rm -rf batchdb/execs batchdb/scripts"
   },
   "repository": {
     "type": "git",
@@ -35,27 +36,22 @@
     "@types/node": "*",
     "@types/pouchdb": "*",
     "@types/shortid": "0.0.28",
-    "cross-env": "^2.0.0",
     "eslint": "^3.7.1",
     "eslint-plugin-react": "^5.2.2",
     "jest": "*",
-    "request": "^2.74.0",
-    "request-promise-native": "^1.0.3",
-    "ts-jest": "*",
+    "request": "*",
+    "request-promise-native": "*",
+    "ts-jest": "^0.1.8",
     "typescript": "*"
   },
   "dependencies": {
     "async": "^2.1.1",
     "bunyan": "^1.8.1",
     "core-decorators": "^0.12.3",
-    "cross-env": "^2.0.1",
     "debug": "^2.2.0",
-    "eslint": "^3.5.0",
-    "jest": "^16.0.1",
     "joi": "^9.1.1",
     "lodash": "^4.16.4",
     "pouchdb": "^6.0.6",
-    "request": "^2.75.0",
     "shortid": "^2.2.6",
     "typescript": "*"
   },

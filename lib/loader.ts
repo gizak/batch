@@ -24,7 +24,7 @@ export class JobScript extends vm.Script {
 
 // synchronously load and compile Job.
 export function newVMScriptFromFile(fpath: string): JobScript {
-	const abspath = path.resolve(fpath)
+	const abspath = fpath
 	const fstr = fs.readFileSync(abspath, 'utf-8')
 	const opts = { filename: abspath, lineOffset: 0, columnOffset: 0, displayErrors: true }
 	return new JobScript(fstr, opts)
