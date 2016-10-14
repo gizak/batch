@@ -1,6 +1,6 @@
 declare var jest, describe, it, expect
 
-import { newObjProxy } from '../lib/helpers'
+import { newObjProxy } from '../build/helpers'
 
 describe('helper', () => {
 	it('newObjProxy accessible', () => {

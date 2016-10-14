@@ -1,6 +1,6 @@
 declare var jest, describe, it, expect
 
-import { JobCtx } from '../lib/job-context'
+import { JobCtx } from '../build/job-context'
 
 describe('JobContext', () => {
 	it('can new instance', () => {

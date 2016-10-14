@@ -1,6 +1,6 @@
 declare var jest, describe, it, expect
 
-import { newStepProxy } from '../lib/step'
+import { newStepProxy } from '../build/step'
 const stepObj = {}
 
 describe('step', () => {

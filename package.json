@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "node_modules/.bin/tsc -p .",
-    "test": "jest --no-cache",
+    "pretest": "node_modules/.bin/tsc -p . --noEmitOnError",
+    "test": "jest",
     "test:full": "jest --coverage"
   },
   "repository": {
@@ -66,9 +67,6 @@
       "tsx",
       "js"
     ],
-    "testEnvironment": "node",
-    "globals": {
-      "__TS_CONFIG__": {}
-    }
+    "testEnvironment": "node"
   }
 }

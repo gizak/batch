@@ -1,6 +1,6 @@
 declare var jest, describe, it, expect
 
-import { Runtime } from '../lib/runtime'
+import { Runtime } from '../build/runtime'
 
 describe('runtime', () => {
 	it('can get JobOperator', () => {

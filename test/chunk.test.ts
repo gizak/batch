@@ -1,6 +1,6 @@
 declare var jest, describe, it, expect
 
-import { newChunkProxy } from '../lib/chunk'
+import { newChunkProxy } from '../build/chunk'
 
 const chunk = {
 	reader: {

@@ -1,8 +1,8 @@
 declare var jest, describe, it, expect
 
-import { Repo } from '../lib/repository'
-import { JobExec } from '../lib/job-execution'
-import { Status } from '../lib/status'
+import { Repo } from '../build/repository'
+import { JobExec } from '../build/job-execution'
+import { Status } from '../build/status'
 
 describe('Repo', () => {
 	let db = null

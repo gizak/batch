@@ -1,6 +1,6 @@
 declare var jest, describe, it, expect
 
-import { newVMScriptFromFile, newRawJob, newJobInst, _newJobInst } from '../lib/loader'
+import { newVMScriptFromFile, newRawJob, newJobInst, _newJobInst } from '../build/loader'
 
 describe('loader', () => {
 	let rt = undefined
