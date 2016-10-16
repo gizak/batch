@@ -3,22 +3,40 @@ declare var jest, describe, it, expect
 import { Repo } from '../build/repository'
 import { JobExec } from '../build/job-execution'
 import { Status } from '../build/status'
+import { Runtime } from '../build/runtime'
 
 describe('Repo', () => {
-	let db = null
+	Runtime.init({ scripts: { dsn: 'batchdb/scripts' }, execs: { dsn: 'batchdb/execs' }})
+	const op = Runtime.operator
+	const db = Runtime.db 
 
 	it('inits in-mem storage', () => {
-		db = new Repo()
-		expect(db.jScripts).toBeDefined()
+		const db2 = new Repo()
+		expect(db2.jScripts).toBeDefined()
 	})
 
 	it('inits in-disk storage', () => {
-		db.initScriptsRepo('batchdb/scripts')
-		db.initExecsRepo('batchdb/execs')
 		expect(db.scriptDocs).toBeDefined()
 		expect(db.execDocs).toBeDefined()
 	})
 
+	it('can add JobScript', async () => {
+		const js = await op._loadJobScriptFromFile('test/job1.js')
+		expect(js).toBeDefined()
+
+		const ji = op._newJobInst(js)
+		expect(ji).toBeDefined()
+		expect(Object.keys(Runtime.db.jInsts).length).toBe(1)
+
+		const je = op._newJobExec(ji)
+		expect(je).toBeDefined()
+		expect(Object.keys(Runtime.db.jExecs).length).toBe(1)
+
+		const jc = op._newJobCtx(ji, je)
+		expect(jc).toBeDefined()
+		expect(Object.keys(Runtime.db.jCtxs).length).toBe(1)
+	})
+		
 	it('converts JobExec to ExecDoc', () => {
 		const je = new JobExec('jname')
 		const doc = db._newExecDoc(je, 'inst-id')
@@ -46,4 +64,5 @@ describe('Repo', () => {
 		})
 	})
 	*/
+
 })

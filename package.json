@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "tsc",
     "pretest": "tsc",
-    "test": "jest --runInBand",
+    "test": "jest",
     "test:full": "jest --coverage --verbose",
     "clean": "rm -rf batchdb/execs batchdb/scripts"
   },
