@@ -6,7 +6,7 @@ import { Status } from '../build/status'
 import { Runtime } from '../build/runtime'
 
 describe('Repo', () => {
-	Runtime.init({ scripts: { dsn: 'batchdb/scripts' }, execs: { dsn: 'batchdb/execs' }})
+	Runtime.initStore({ scripts: { dsn: 'batchdb/scripts' }, execs: { dsn: 'batchdb/execs' }})
 	const op = Runtime.operator
 	const db = Runtime.db 
 
