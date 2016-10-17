@@ -7,6 +7,7 @@ import { JobScript, newVMScriptFromFile, newRawJob, newJobInst } from './loader'
 import { resolve } from 'path'
 import { Status } from './status'
 import { StepExec } from './step-execution'
+import { StepCtx } from './step-context'
 
 export class Operator {
 	private readonly db: Repo
@@ -139,8 +140,39 @@ export class Operator {
 		return ret
 	}
 
+	public async start(jobfpath: string): Promise<string> {
+		const js = await this._loadJobScriptFromFile(jobfpath)
+		const ji = this._newJobInst(js)
+		const je = await this._newJobExec(ji)
+		const jc = this._newJobCtx(ji, je)
+
+		ji.RUNTIME.jobContext = jc
+		ji.before()
+
+		// steps
+		for (const step of ji.steps) {
+			// step ctx
+			const se = new StepExec(this.db, je.id)
+			const sc = new StepCtx(this.db, step.id, se.execId)
+			ji.RUNTIME.stepContext[step.id] = sc
+
+			step.before()
+			if (step.batchlet) {
+
+			} else if (step.chunk) {
+				const chunk = step.chunk
+				chunk.before()
+
+				// process
+
+				chunk.after()
+			}
+		}
+		return ''
+	}
+
 	/*
-	public start(jobpath: string): string {}
+	
 	public restart(execId: string): string {}
 	public stop(execId: string) {}
 	public abondon(execId: string) {}
