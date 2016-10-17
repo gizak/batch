@@ -5,6 +5,8 @@ import { JobCtx } from './job-context'
 import { JobExec } from './job-execution'
 import { JobScript, newVMScriptFromFile, newRawJob, newJobInst } from './loader'
 import { resolve } from 'path'
+import { Status } from './status'
+import { StepExec } from './step-execution'
 
 export class Operator {
 	private readonly db: Repo
@@ -17,16 +19,22 @@ export class Operator {
 	// return id
 	async _loadJobScriptFromFile(fpath: string): Promise<JobScript> {
 		fpath = resolve(fpath)
-		// load from cache
-		for (const _id in this.db.jScripts) {
-			if (this.db.jScripts[_id].fpath === fpath ) {
-				return this.db.jScripts[_id]
-			}
-		}
-		// otherwise add it 
+
+		// pre-screen it
 		const js = newVMScriptFromFile(fpath)
-		this.db.jScripts[js._id] = js
-		await this.db.addScript(js)
+		const rjob = newRawJob(js)
+		if ( !rjob.id ) {
+			throw new EvalError('no id field specified in job file: ' + fpath)
+		}
+		const jname = rjob.id
+
+		// load from cache
+		if (jname in this.db.jScripts) {
+			return this.db.jScripts[jname]
+		}
+
+		// otherwise add it 
+		await this.db.addScript(js, jname)
 		return js
 	}
 
@@ -44,7 +52,7 @@ export class Operator {
 	}
 
 	async _newJobExec(ji: Job ): Promise<JobExec> {
-		const je = new JobExec(ji.id)
+		const je = new JobExec(ji.id, ji._id)
 		this.db.jExecs[je.id] = je
 		await this.db.addExec(je)
 		return je
@@ -60,6 +68,81 @@ export class Operator {
 		const js = await this._loadJobScriptFromFile(fpath)
 		const ji = this._newJobInst(js)
 		const je = await this._newJobExec(ji)
-		const jc = this._newJobCtx(ji,je)
+		const jc = this._newJobCtx(ji, je)
 	}
+
+	get jobNames(): string[] {
+		return Object.keys(this.db.jScripts)
+	}
+
+	jobInsts(jobName: string): Job[] {
+		let insts: Job[] = []
+		for (const k in this.db.jInsts) {
+			if (this.db.jInsts[k].id === jobName) {
+				insts.push(this.db.jInsts[k] )
+			}
+		}
+		return insts
+	}
+
+	jobInstCount(jobName: string) {
+		const jis = this.db.jInsts
+		let cnt = 0
+		for ( const k in jis ) {
+			if (jis[k].id === jobName) {
+				cnt++
+			}
+		}
+		return cnt
+	}
+
+	runningExecs(jobName: string): string[] {
+		let execs: string[] = []
+		const jes = this.db.jExecs
+		for (const k in jes) {
+			if (jes[k].jobName === jobName && 
+				jes[k].batchStatus in [Status.STARTED, Status.STARTING, Status.STOPPING]) {
+				execs.push(jes[k].id)
+			}
+		}
+		return execs
+	}
+
+	jobInst(execId: string): Job {
+		const exec = this.db.jExecs[execId]
+		return this.db.jInsts[exec.instId]
+	}
+
+	jobExecs(inst: Job): JobExec[] {
+		let execs: JobExec[] = []
+		const jes = this.db.jExecs
+		for (const k in jes) {
+			if (jes[k].instId === inst._id) {
+				execs.push(jes[k])
+			}
+		}
+		return execs
+	}
+
+	jobExec(execId: string): JobExec {
+		return this.db.jExecs[execId]
+	}
+
+	stepExecs(execId: string): StepExec[] {
+		let ret: StepExec[] = []
+		const ses = this.db.sExecs
+		for ( const k in ses ) {
+			if (ses[k].execId === execId ) {
+				ret.push(ses[k])
+			}
+		}
+		return ret
+	}
+
+	/*
+	public start(jobpath: string): string {}
+	public restart(execId: string): string {}
+	public stop(execId: string) {}
+	public abondon(execId: string) {}
+	*/
 }

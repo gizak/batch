@@ -86,9 +86,9 @@ export class Repo {
 		this.stepDocsDSN = dsn
 	}
 
-	async addScript(js: JobScript) {
-		const record: ScriptDoc = { _id: js._id, content: js.fstr, ctime: js._ctime.toISOString(), fpath: js.fpath }
-		this.jScripts[js._id] = js
+	async addScript(js: JobScript, jname: string) {
+		const record: ScriptDoc = { _id: jname, content: js.fstr, ctime: js._ctime.toISOString(), fpath: js.fpath }
+		this.jScripts[jname] = js
 		if (this.scriptDocs == null) {
 			return
 		}
