@@ -40,6 +40,7 @@ export class Chunk {
 	public writer: ItemWriter
 	public processor: ItemProcessor
 	public itemCount: number
+	public concurrency: number
 
 	before(): any { }
 	after(): any { }
@@ -50,6 +51,7 @@ export class Chunk {
 		this.processor = new ItemProcessor()
 		this.writer = new ItemWriter()
 		this.itemCount = 1
+		this.concurrency = 1
 	}
 }
 
