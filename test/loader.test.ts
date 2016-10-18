@@ -12,9 +12,8 @@ describe('loader', () => {
 	it('loads script from disk', () => {
 		vms = newVMScriptFromFile('test/job1.js')
 		expect(vms._id).toBeDefined()
-		job = newRawJob(vms)
 		rt = {}
-		jip = newJobInst(job, rt)
+		jip = newJobInst(vms, rt)
 	})
 	it('can have job script access own prop and ext RUNTIME', () => {
 		rt = jip.RUNTIME

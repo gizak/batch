@@ -38,6 +38,7 @@ export function _newJobInst(script: JobScript): Job {
 	}
 	const share = {
 		require: require,
+		console: console,
 		module: _module,
 		exports: _module.exports,
 		RUNTIME: { jobContext: {}, stepContext: {} }
@@ -72,16 +73,31 @@ export function newRawJob(script: JobScript): any {
 	}
 	const share = {
 		require: require,
+		console: console,
 		module: _module,
 		exports: _module.exports,
 		RUNTIME: { jobContext: {}, stepContext: {} }
 	}
 	const context = vm.createContext(share)
-	script.runInContext(context)
+	script.runInContext(context, {filename: script.fpath, displayErrors: true})
 	return _module.exports
 }
 
-export function newJobInst(rawJob: any, runtimeObj: any): Job {
+
+export function newJobInst(script: JobScript, runtimeObj: any): Job {
+	const _module = {
+		exports: {}
+	}
+	const share = {
+		require: require,
+		console: console,
+		module: _module,
+		exports: _module.exports,
+		RUNTIME: runtimeObj
+	}
+	const context = vm.createContext(share)
+	script.runInContext(context, {filename: script.fpath, displayErrors: true})
+	const rawJob = _module.exports
 	const jobp = newJobProxy(rawJob, runtimeObj)
 	return jobp
 }

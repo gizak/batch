@@ -1,48 +1,46 @@
-const rq = require('request-promise-native')
+const rp = require('request-promise-native')
 const baseUrl = 'http://jsonplaceholder.typicode.com'
-
-let eData = []
-
+ 
 const reader = {
 	open: (chk) => {
 		return rp({uri: baseUrl+'/albums', json: true}).then((j)=>{
-			eData = j[Symbol.iterator]()
+			RUNTIME.stepContext['step1'].transientUserData = j[Symbol.iterator]()
 		})
 	},
 	readItem: () => {
-		const v = eData.next().value
-		//console.log('[reader]\t readItem: ' + v)
+		const v = RUNTIME.stepContext['step1'].transientUserData.next().value
+		console.log('[reader]\t readItem: ' + v)
 		return v
 	},
 	close: () => {
-		//console.log('[reader]\t close')
+		console.log('[reader]\t close')
 	},
 	checkpointinfo: () => {
-		//console.log('[reader]\t checkpoint')
+		console.log('[reader]\t checkpoint')
 		return {}
 	}
 }
 
 const processor = {
 	processItem: (item) => {
-		//console.log('[processor]\t processItem ' + item)
+		console.log('[processor]\t processItem ' + item)
 		return item
 	}
 }
 
 const writer = {
 	writeItems: (res) => {
-		//console.log('[writer]\t writeItems(' + res.length + ') ' + res)
+		console.log('[writer]\t writeItems(' + res.length + ') ' + res)
 	}
 }
 
 const batchleter = {
 	process: () => {
-		//console.log('process')
+		console.log('process')
 		return ''
 	},
 	stop: () => {
-		//console.log('stop')
+		console.log('stop')
 	}
 }
 

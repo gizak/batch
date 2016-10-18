@@ -44,11 +44,8 @@ export class Operator {
 	// store it in db 
 	// return new jobInst id
 	_newJobInst(js: JobScript): Job {
-		const rjob = newRawJob(js)
-		// this.db.jRaw[rjob._]
-		// yup, new runtime object
 		const rt = { jobContext: {}, stepContext: {} }
-		const job = newJobInst(rjob, rt)
+		const job = newJobInst(js, rt)
 		this.db.jInsts[job._id] = job
 		return job
 	}
@@ -233,6 +230,7 @@ export class Operator {
 				} catch (err) {
 					se.batchStatus = Status.FAILED
 					chunk.onError(err)
+					throw err
 				}
 			}
 			step.after()
@@ -253,11 +251,10 @@ export class Operator {
 		ji.before()
 
 		// steps
-		try {
-			this._runSteps(ji, je)
-		} catch (err) {
+		this._runSteps(ji, je).catch(err => {
 			je.batchStatus = Status.FAILED
-		}
+			throw err
+		})
 
 		je.batchStatus = Status.STARTED
 

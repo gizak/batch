@@ -1,5 +1,7 @@
 const batch = require('../')
-//const step = require('../build/runtime/step')
-batch.Runtime.init({ scripts: { dsn: 'batchdb/scripts' }, execs: { dsn: 'batchdb/execs' }} )
-//const jo = batch.Runtime.operator
-batch.Runtime._dumpDB()
+
+batch.Runtime.init({db:{}})
+const op = batch.Runtime.operator
+op.start('test/job1.js').then( id => {
+	console.log(id)
+}).catch(e => console.log(e))

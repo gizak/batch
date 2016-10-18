@@ -17,6 +17,8 @@ describe('operator', () => {
 		expect(js).toBeTruthy()
 		const ji = op._newJobInst(js)
 		expect(ji).toBeTruthy()
+		ji.RUNTIME.o = {x:2}
+		expect(ji.RUNTIME.o.x).toBe(2)
 		const je = await op._newJobExec(ji)
 		expect(je).toBeTruthy()
 		const jc = op._newJobCtx(ji,je)
@@ -32,5 +34,17 @@ describe('operator', () => {
 		expect(op.jobInsts(jname).length).toBe(2)
 		expect(op.jobInstCount(jname)).toBe(2)
 		expect(op.runningExecs(jname).length).toBe(3)
+	})
+
+	it('starts job', async () => {
+		try {
+		const eid = await op.start('test/job1.js')
+		expect(eid).toBeTruthy()
+		expect(op.jobNames.length).toBe(1)
+		const [jname] = op.jobNames
+		expect(op.jobInsts(jname).length).toBe(3)
+		expect(op.jobInstCount(jname)).toBe(3)
+		expect(op.runningExecs(jname).length).toBe(4)
+		} catch ( err ) { expect(err).toBeFalsy(); throw err}
 	})
 })
