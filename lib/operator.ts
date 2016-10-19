@@ -9,17 +9,20 @@ import { Status } from './status'
 import { StepExec } from './step-execution'
 import { StepCtx } from './step-context'
 import { queue, parallel } from 'async'
+import { Logger } from 'bunyan'
 
 export class Operator {
 	private readonly db: Repo
+	private readonly _logger: Logger
 
-	constructor(repo: Repo) {
+	constructor(repo: Repo, logger: Logger) {
 		this.db = repo
+		this._logger = logger
 	}
 
 	// load job script into db
 	// return id
-	async _loadJobScriptFromFile(fpath: string): Promise<JobScript> {
+	async _loadJobScriptFromFile(fpath: string): Promise<{js:JobScript,id:string}> {
 		fpath = resolve(fpath)
 
 		// pre-screen it
@@ -32,20 +35,29 @@ export class Operator {
 
 		// load from cache
 		if (jname in this.db.jScripts) {
-			return this.db.jScripts[jname]
+			return {js: this.db.jScripts[jname], id: jname}
 		}
 
 		// otherwise add it 
 		await this.db.addScript(js, jname)
-		return js
+		return {js: js, id: jname}
 	}
 
 	// new job instance from js,
 	// store it in db 
 	// return new jobInst id
-	_newJobInst(js: JobScript): Job {
+	_newJobInst(js: JobScript, loggerName: string): Job {
 		const rt = { jobContext: {}, stepContext: {} }
-		const job = newJobInst(js, rt)
+		const logp = new Proxy<Logger>(this._logger.child({job: loggerName}), 
+			{ 
+				get(t, prop, r) { 
+					if(prop == 'log') {
+						return Reflect.get(t, 'info', r)
+					}
+					return Reflect.get(t, prop, r) 
+				}
+			})
+		const job = newJobInst(js, rt, logp)
 		this.db.jInsts[job._id] = job
 		return job
 	}
@@ -64,8 +76,8 @@ export class Operator {
 	}
 
 	async _initJob(fpath: string) {
-		const js = await this._loadJobScriptFromFile(fpath)
-		const ji = this._newJobInst(js)
+		const {js,id} = await this._loadJobScriptFromFile(fpath)
+		const ji = this._newJobInst(js,id)
 		const je = await this._newJobExec(ji)
 		const jc = this._newJobCtx(ji, je)
 	}
@@ -140,6 +152,8 @@ export class Operator {
 
 	async _runSteps(ji: Job, je: JobExec) {
 		for (const step of ji.steps) {
+			this._logger.info('Exec step: %s/%s', je.id, step.id)
+
 			// step ctx
 			const se = new StepExec(this.db, je.id)
 			const sc = new StepCtx(this.db, step.id, se.execId)
@@ -242,16 +256,21 @@ export class Operator {
 
 
 	public async start(jobfpath: string): Promise<string> {
-		const js = await this._loadJobScriptFromFile(jobfpath)
-		const ji = this._newJobInst(js)
+		this._logger.info('Load job file: %s', jobfpath)
+		const {js, id} = await this._loadJobScriptFromFile(jobfpath)
+		const ji = this._newJobInst(js, id)
 		const je = await this._newJobExec(ji)
 		const jc = this._newJobCtx(ji, je)
+
+		this._logger.info('Starting job: %s, execId: %s', ji.id, je.id)
 
 		ji.RUNTIME.jobContext = jc
 		ji.before()
 
 		// steps
+		this._logger.debug('%s Run steps')
 		this._runSteps(ji, je).catch(err => {
+			this._logger.error(err, 'Step excution failed')
 			je.batchStatus = Status.FAILED
 			throw err
 		})

@@ -84,13 +84,13 @@ export function newRawJob(script: JobScript): any {
 }
 
 
-export function newJobInst(script: JobScript, runtimeObj: any): Job {
+export function newJobInst(script: JobScript, runtimeObj: any, logger: any = console): Job {
 	const _module = {
 		exports: {}
 	}
 	const share = {
 		require: require,
-		console: console,
+		console: logger,
 		module: _module,
 		exports: _module.exports,
 		RUNTIME: runtimeObj
