@@ -8,6 +8,8 @@ import * as shortid from 'shortid'
 import * as fs from 'fs'
 import * as vm from 'vm'
 import * as path from 'path'
+import { Console } from 'console'
+const devnull = require('dev-null')
 
 export class JobScript extends vm.Script {
 	readonly _id: string
@@ -30,6 +32,7 @@ export function newVMScriptFromFile(fpath: string): JobScript {
 	return new JobScript(fstr, opts)
 }
 
+/*
 // init job context/exec, runtime uid
 // may throw error if job script is not validated
 export function _newJobInst(script: JobScript): Job {
@@ -66,14 +69,15 @@ export function _newJobInst(script: JobScript): Job {
 	// now all hooked up
 	return jobp
 }
-
+*/
 export function newRawJob(script: JobScript): any {
 	const _module = {
 		exports: {}
 	}
+
 	const share = {
 		require: require,
-		console: console,
+		console: new Console(devnull(), devnull()),
 		module: _module,
 		exports: _module.exports,
 		RUNTIME: { jobContext: {}, stepContext: {} }

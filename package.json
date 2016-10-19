@@ -7,6 +7,7 @@
     "prepublish": "tsc",
     "pretest": "tsc",
     "test": "jest",
+    "dryrun": "tsc && node test/index.js | bunyan -o short",
     "test:full": "jest --coverage --verbose",
     "clean": "rm -rf batchdb/execs batchdb/scripts"
   },
@@ -29,18 +30,16 @@
   "devDependencies": {
     "@types/async": "^2.0.32",
     "@types/bunyan": "0.0.30",
-    "@types/core-decorators": "^0.10.30",
     "@types/joi": "^9.0.32",
     "@types/koa": "^2.0.33",
     "@types/lodash": "^4.14.37",
     "@types/node": "*",
     "@types/pouchdb": "*",
     "@types/shortid": "0.0.28",
-    "dev-null": "^0.1.1",
     "eslint": "^3.7.1",
     "eslint-plugin-react": "^5.2.2",
     "jest": "*",
-    "request": "*",
+    "request": "^2.75.0",
     "request-promise-native": "*",
     "ts-jest": "^0.1.8",
     "typescript": "*"
@@ -48,8 +47,7 @@
   "dependencies": {
     "async": "^2.1.1",
     "bunyan": "^1.8.3",
-    "core-decorators": "^0.12.3",
-    "debug": "^2.2.0",
+    "dev-null": "^0.1.1",
     "joi": "^9.1.1",
     "lodash": "^4.16.4",
     "memdown": "^1.2.2",

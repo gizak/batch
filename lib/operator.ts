@@ -168,8 +168,10 @@ export class Operator {
 				try {
 					chunk.before()
 					se.batchStatus = Status.STARTED
+					this._logger.debug('%s/%s: started exec step', je.id, step.id)
 
 					// open
+					this._logger.debug('%s/%s: open reader/writer', je.id, step.id)
 					await chunk.reader.open()
 					await chunk.writer.open()
 					chunk.before()
@@ -188,6 +190,7 @@ export class Operator {
 					// def helpers
 					const procItems = async () => {
 						const workers = items.map((i) => {
+							this._logger.debug({item: i}, '%s/%s: process item', je.id, step.id)
 							return (callback) => {
 								// process
 								chunk.processor.before(i)
@@ -219,12 +222,15 @@ export class Operator {
 					for (let item = await chunk.reader.readItem(); isCont && item != null; item = await chunk.reader.readItem()) {
 						chunk.reader.after()
 
+						this._logger.debug({item: item}, '%s/%s: read item', je.id, step.id)
 						// round up items
 						items.push(item)
 						if (items.length === chunk.itemCount) {
 							// process
 							const results = await procItems()
+
 							// write
+							this._logger.debug({results: results}, '%s/%s: write results', je.id, step.id)
 							await writeResults(results)
 							// reset
 							items = []
@@ -235,6 +241,8 @@ export class Operator {
 
 					// left-overs
 					if (items) {
+						const results = await procItems()
+						this._logger.debug({results: results}, '%s/%s: write results', je.id, step.id)
 						await writeResults(await procItems())
 					}
 
@@ -244,11 +252,13 @@ export class Operator {
 				} catch (err) {
 					se.batchStatus = Status.FAILED
 					chunk.onError(err)
+					this._logger.error(err, '%s/%s: encouted error', je.id, step.id)
 					throw err
 				}
 			}
 			step.after()
 			se.batchStatus = Status.COMPLETED
+			this._logger.info('%s/%s: process completed', je.id, step.id)
 		}
 		ji.after()
 		je.batchStatus = Status.COMPLETED
@@ -268,7 +278,7 @@ export class Operator {
 		ji.before()
 
 		// steps
-		this._logger.debug('%s Run steps')
+		this._logger.debug('run %s steps', id)
 		this._runSteps(ji, je).catch(err => {
 			this._logger.error(err, 'Step excution failed')
 			je.batchStatus = Status.FAILED
