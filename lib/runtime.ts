@@ -16,14 +16,14 @@ export class Runtime {
 		return Runtime._op
 	}
 
-	static init(opts?:	{db?: { scripts?: { dsn: string }, execs?: { dsn: string }, steps?: { dsn: string } }, 
+	static init(opts?:	{db?: { scripts?: { dsn: string }, execs?: { dsn: string }, steps?: { dsn: string } },
 						log?: {stream?: any, name: string, level: string}}) {
-		opts = opts || {}		
+		opts = opts || {}
 
 		Runtime.initLogger(opts.log)
-		Runtime._logger.info("Init Runtime")
+		Runtime._logger.info('Init Runtime')
 
-		Runtime._logger.info({config: opts.db}, "Init Database with config")
+		Runtime._logger.info({config: opts.db}, 'Init Database with config')
 		Runtime.initStore(opts.db)
 	}
 

@@ -36,6 +36,7 @@
     "@types/node": "*",
     "@types/pouchdb": "*",
     "@types/shortid": "0.0.28",
+    "dev-null": "^0.1.1",
     "eslint": "^3.7.1",
     "eslint-plugin-react": "^5.2.2",
     "jest": "*",

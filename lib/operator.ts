@@ -22,7 +22,7 @@ export class Operator {
 
 	// load job script into db
 	// return id
-	async _loadJobScriptFromFile(fpath: string): Promise<{js:JobScript,id:string}> {
+	async _loadJobScriptFromFile(fpath: string): Promise<{js: JobScript, id: string}> {
 		fpath = resolve(fpath)
 
 		// pre-screen it
@@ -48,13 +48,13 @@ export class Operator {
 	// return new jobInst id
 	_newJobInst(js: JobScript, loggerName: string): Job {
 		const rt = { jobContext: {}, stepContext: {} }
-		const logp = new Proxy<Logger>(this._logger.child({job: loggerName}), 
-			{ 
-				get(t, prop, r) { 
-					if(prop == 'log') {
+		const logp = new Proxy<Logger>(this._logger.child({job: loggerName}),
+			{
+				get(t, prop, r) {
+					if (prop === 'log') {
 						return Reflect.get(t, 'info', r)
 					}
-					return Reflect.get(t, prop, r) 
+					return Reflect.get(t, prop, r)
 				}
 			})
 		const job = newJobInst(js, rt, logp)
@@ -76,8 +76,8 @@ export class Operator {
 	}
 
 	async _initJob(fpath: string) {
-		const {js,id} = await this._loadJobScriptFromFile(fpath)
-		const ji = this._newJobInst(js,id)
+		const {js, id} = await this._loadJobScriptFromFile(fpath)
+		const ji = this._newJobInst(js, id)
 		const je = await this._newJobExec(ji)
 		const jc = this._newJobCtx(ji, je)
 	}

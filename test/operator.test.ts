@@ -1,8 +1,9 @@
 declare var jest, describe, it, expect
 
 import { Runtime } from '../build/runtime'
+const devnull = require('dev-null')
 
-Runtime.init({db: {}}) // in-mem
+Runtime.init({log: {stream: devnull(), name: 'op-test'}}) // in-mem
 
 describe('operator', () => {
 	let op
@@ -13,7 +14,8 @@ describe('operator', () => {
 	})
 
 	it('loads job file', async ()=>{
-		js = await op._loadJobScriptFromFile('test/job1.js')
+		const ret = await op._loadJobScriptFromFile('test/job1.js')
+		js = ret.js
 		expect(js).toBeTruthy()
 		const ji = op._newJobInst(js)
 		expect(ji).toBeTruthy()

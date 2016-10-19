@@ -207,8 +207,8 @@ ajv-keywords@^1.0.0:
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.1.1.tgz#02550bc605a3e576041565628af972e06c549d50"
 
 ajv@^4.7.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.8.0.tgz#011df5c4a08edb29574a477269afb15a6f97abe5"
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.8.1.tgz#708213577289a84a8148e66daa980c32da6a562e"
   dependencies:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
@@ -567,7 +567,7 @@ builtin-modules@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
 
-bunyan:
+bunyan@^1.8.3:
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/bunyan/-/bunyan-1.8.3.tgz#a499e8a6c991b4500f93af2d5dad3711dea5381e"
   optionalDependencies:
@@ -814,6 +814,10 @@ detect-indent@^3.0.1:
     get-stdin "^4.0.1"
     minimist "^1.1.0"
     repeating "^1.1.0"
+
+dev-null@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/dev-null/-/dev-null-0.1.1.tgz#5a205ce3c2b2ef77b6238d6ba179eb74c6a0e818"
 
 diff@^3.0.0:
   version "3.0.1"
@@ -1262,11 +1266,11 @@ ghrepos@~2.0.0:
     ghutils "~3.2.0"
 
 ghutils@~3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/ghutils/-/ghutils-3.2.0.tgz#cbae545d88f4194754004603d4b5cb9c6537864e"
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/ghutils/-/ghutils-3.2.1.tgz#4fcedffac935fcace06e12a17c6174e2c29ffe4f"
   dependencies:
-    jsonist "~1.2.0"
-    xtend "~4.0.0"
+    jsonist "~1.3.0"
+    xtend "~4.0.1"
 
 github-from-package@0.0.0:
   version "0.0.0"
@@ -1539,6 +1543,10 @@ is-fullwidth-code-point@^1.0.0:
   resolved "https://registry.yarnpkg.com/is-fullwidth-code-point/-/is-fullwidth-code-point-1.0.0.tgz#ef9e31386f031a7f0d643af82fde50c457ef00cb"
   dependencies:
     number-is-nan "^1.0.0"
+
+is-fullwidth-code-point@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/is-fullwidth-code-point/-/is-fullwidth-code-point-2.0.0.tgz#a3b30a5c4f199183167aaab93beefae3ddfb654f"
 
 is-glob@^2.0.0, is-glob@^2.0.1:
   version "2.0.1"
@@ -1910,8 +1918,8 @@ jodid25519@^1.0.0:
     jsbn "~0.1.0"
 
 joi@^9.1.1:
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/joi/-/joi-9.1.1.tgz#357a04c3ad424abcb9790829be8c01a131d93500"
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-9.2.0.tgz#3385ac790192130cbe230e802ec02c9215bbfeda"
   dependencies:
     hoek "4.x.x"
     isemail "2.x.x"
@@ -1989,9 +1997,9 @@ jsonify@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
 
-jsonist@~1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/jsonist/-/jsonist-1.2.0.tgz#da7555a5da1002d53ba30c3f0e05a2808fb82f34"
+jsonist@~1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/jsonist/-/jsonist-1.3.0.tgz#c0c74b95ef1c952038619b29efa520b1cc987556"
   dependencies:
     bl "~1.0.0"
     hyperquest "~1.2.0"
@@ -2815,7 +2823,7 @@ request-promise-core@1.1.1:
   dependencies:
     lodash "^4.13.1"
 
-request-promise-native:
+request-promise-native@*:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/request-promise-native/-/request-promise-native-1.0.3.tgz#9cb2b2f69f137e4acf35116a08a441cbfd0c0134"
   dependencies:
@@ -3014,8 +3022,8 @@ sntp@1.x.x:
     hoek "2.x.x"
 
 source-map-support@^0.4.2:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.4.tgz#0df5765a05a560c91bc8f8641cf79f2affc0322e"
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.5.tgz#4438df4219e1b3c7feb674614b4c67f9722db1e4"
   dependencies:
     source-map "^0.5.3"
 
@@ -3088,6 +3096,13 @@ string-width@^1.0.1, string-width@^1.0.2:
     is-fullwidth-code-point "^1.0.0"
     strip-ansi "^3.0.0"
 
+string-width@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-2.0.0.tgz#635c5436cc72a6e0c387ceca278d4e2eec52687e"
+  dependencies:
+    is-fullwidth-code-point "^2.0.0"
+    strip-ansi "^3.0.0"
+
 string.prototype.codepointat@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/string.prototype.codepointat/-/string.prototype.codepointat-0.2.0.tgz#6b26e9bd3afcaa7be3b4269b526de1b82000ac78"
@@ -3131,15 +3146,15 @@ supports-color@^3.1.0, supports-color@^3.1.2:
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.1.4.tgz#02b279348d337debc39694c5c95f882d448a312a"
 
 table@^3.7.8:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/table/-/table-3.8.0.tgz#252166c7f3286684a9d561b0f3a8929caf3a997b"
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/table/-/table-3.8.3.tgz#2bbc542f0fda9861a755d3947fefd8b3f513855f"
   dependencies:
     ajv "^4.7.0"
     ajv-keywords "^1.0.0"
     chalk "^1.1.1"
     lodash "^4.0.0"
     slice-ansi "0.0.4"
-    string-width "^1.0.1"
+    string-width "^2.0.0"
 
 tar-fs@^1.7.0:
   version "1.14.0"
@@ -3413,7 +3428,7 @@ write@^0.2.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
 
-xtend@^4.0.0, xtend@^4.0.1, "xtend@>=4.0.0 <4.1.0-0", xtend@~4.0.0:
+xtend@^4.0.0, xtend@^4.0.1, "xtend@>=4.0.0 <4.1.0-0", xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
 

@@ -7,8 +7,9 @@ import { Runtime } from '../build/runtime'
 
 describe('Repo', () => {
 	Runtime.initStore({ scripts: { dsn: 'batchdb/scripts' }, execs: { dsn: 'batchdb/execs' }})
+	Runtime.initLogger()
 	const op = Runtime.operator
-	const db = Runtime.db 
+	const db = Runtime.db
 
 	it('inits in-mem storage', () => {
 		const db2 = new Repo()
@@ -21,7 +22,7 @@ describe('Repo', () => {
 	})
 
 	it('can add JobScript', async () => {
-		const js = await op._loadJobScriptFromFile('test/job1.js')
+		const {js} = await op._loadJobScriptFromFile('test/job1.js')
 		expect(js).toBeDefined()
 
 		const ji = op._newJobInst(js)
