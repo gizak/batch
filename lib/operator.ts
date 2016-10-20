@@ -152,7 +152,7 @@ export class Operator {
 
 	async _runSteps(ji: Job, je: JobExec) {
 		for (const step of ji.steps) {
-			this._logger.info('Exec step: %s/%s', je.id, step.id)
+			this._logger.debug('%s/%s/%s: before step hooks',je.jobName, je.id, step.id)
 
 			// step ctx
 			const se = new StepExec(this.db, je.id)
@@ -168,10 +168,10 @@ export class Operator {
 				try {
 					chunk.before()
 					se.batchStatus = Status.STARTED
-					this._logger.debug('%s/%s: started exec step', je.id, step.id)
+					this._logger.debug('%s/%s/%s: started exec step',je.jobName, je.id, step.id)
 
 					// open
-					this._logger.debug('%s/%s: open reader/writer', je.id, step.id)
+					this._logger.debug('$s/%s/%s: open reader/writer',je.jobName, je.id, step.id)
 					await chunk.reader.open()
 					await chunk.writer.open()
 					chunk.before()
@@ -190,7 +190,7 @@ export class Operator {
 					// def helpers
 					const procItems = async () => {
 						const workers = items.map((i) => {
-							this._logger.debug({item: i}, '%s/%s: process item', je.id, step.id)
+							this._logger.debug({item: i}, '%s/%s/%s: process item', je.jobName, je.id, step.id)
 							return (callback) => {
 								// process
 								chunk.processor.before(i)
@@ -211,7 +211,8 @@ export class Operator {
 					}
 
 					// write multi results
-					async function writeResults(res) {
+					const writeResults = async (res) => {
+						this._logger.debug({results: res}, '%s/%s/%s: write results',je.jobName, je.id, step.id)
 						chunk.writer.before(res)
 						await chunk.writer.writeItems(res)
 						chunk.writer.after(res)
@@ -219,7 +220,7 @@ export class Operator {
 
 					// begin proces
 					chunk.reader.before()
-					for (let item = await chunk.reader.readItem(); isCont && item != null; item = await chunk.reader.readItem()) {
+					for (let item = await chunk.reader.readItem(); isCont && item != null && item != undefined; item = await chunk.reader.readItem()) {
 						chunk.reader.after()
 
 						this._logger.debug({item: item}, '%s/%s: read item', je.id, step.id)
@@ -230,7 +231,6 @@ export class Operator {
 							const results = await procItems()
 
 							// write
-							this._logger.debug({results: results}, '%s/%s: write results', je.id, step.id)
 							await writeResults(results)
 							// reset
 							items = []
@@ -240,9 +240,7 @@ export class Operator {
 					}
 
 					// left-overs
-					if (items) {
-						const results = await procItems()
-						this._logger.debug({results: results}, '%s/%s: write results', je.id, step.id)
+					if (items.length > 0) {
 						await writeResults(await procItems())
 					}
 
@@ -252,13 +250,13 @@ export class Operator {
 				} catch (err) {
 					se.batchStatus = Status.FAILED
 					chunk.onError(err)
-					this._logger.error(err, '%s/%s: encouted error', je.id, step.id)
+					this._logger.error(err, '%s/%s/%s: encouted error',je.jobName, je.id, step.id)
 					throw err
 				}
 			}
 			step.after()
 			se.batchStatus = Status.COMPLETED
-			this._logger.info('%s/%s: process completed', je.id, step.id)
+			this._logger.info('%s/%s/%s: process completed',je.jobName, je.id, step.id)
 		}
 		ji.after()
 		je.batchStatus = Status.COMPLETED
@@ -272,13 +270,13 @@ export class Operator {
 		const je = await this._newJobExec(ji)
 		const jc = this._newJobCtx(ji, je)
 
-		this._logger.info('Starting job: %s, execId: %s', ji.id, je.id)
+		this._logger.info('Starting job: %s, instId: %s, execId: %s', id, ji.id, je.id)
 
 		ji.RUNTIME.jobContext = jc
 		ji.before()
 
 		// steps
-		this._logger.debug('run %s steps', id)
+		this._logger.debug('%s/%s: kickstart steps', id, je.id)
 		this._runSteps(ji, je).catch(err => {
 			this._logger.error(err, 'Step excution failed')
 			je.batchStatus = Status.FAILED

@@ -7,7 +7,7 @@
     "prepublish": "tsc",
     "pretest": "tsc",
     "test": "jest",
-    "dryrun": "tsc && node test/index.js | bunyan -o short",
+    "dryrun": "tsc && node test/index.js",
     "test:full": "jest --coverage --verbose",
     "clean": "rm -rf batchdb/execs batchdb/scripts"
   },
@@ -47,6 +47,7 @@
   "dependencies": {
     "async": "^2.1.1",
     "bunyan": "^1.8.3",
+    "bunyan-format": "^0.2.1",
     "dev-null": "^0.1.1",
     "joi": "^9.1.1",
     "lodash": "^4.16.4",
